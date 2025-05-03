@@ -103,8 +103,7 @@
     </div>
     <!-- ./wrapper -->
     <footer class="main-footer">
-        <strong>Copyright © 2023-{{ date('Y') }} <a href="nihirz.netlify.app">Zala
-                Nihir</a>.</strong> All rights reserved.
+        <strong>Copyright © 2025 <a href="https://www.linkedin.com/in/deni-sarifudin-04a828160/">Deni Syarif</a>.</strong> All rights reserved.
     </footer>
     <!-- ./wrapper -->
 

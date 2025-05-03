@@ -7,6 +7,13 @@ use App\Models\Collection;
 use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\User;
+use App\Models\Asuransi;
+use App\Models\Pasien;
+use App\Models\Dokter;
+use App\Models\Poliklinik;
+use App\Models\Spesialis;
+use App\Models\Obat;
+
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -40,6 +47,27 @@ class Sidebar extends Component
         
         $ProductCount = Product::count();
         view()->share('ProductCount',$ProductCount);
+
+        $AsuransiCount = Asuransi::count();
+        view()->share('AsuransiCount',$AsuransiCount);
+
+        $PasienCount = Pasien::count();
+        view()->share('PasienCount',$PasienCount);
+
+        $SpesialisCount = Spesialis::count();
+        view()->share('SpesialisCount',$SpesialisCount);
+
+        $DokterCount = Dokter::count();
+        view()->share('DokterCount',$DokterCount);
+
+        $PoliCount = Poliklinik::count();
+        view()->share('PoliCount',$PoliCount);
+
+        $PendaftaaranCount = Dokter::count();
+        view()->share('PendaftaaranCount',$PendaftaaranCount);
+
+        $DataObatCount = Obat::count();
+        view()->share('DataObatCount',$DataObatCount);
     }
 
     /**
