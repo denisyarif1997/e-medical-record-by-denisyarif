@@ -3,12 +3,14 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SatuanObatController;
 use App\Http\Controllers\SpesialisController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
@@ -39,6 +41,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::resource('pendaftaran', PendaftaranController::class)->except(['show']);
         Route::resource('obat', ObatController::class);
         Route::resource('asesmen_perawat', AsesmenPerawatController::class);
+        Route::resource('satuan_obat', SatuanObatController::class);
+        Route::resource('formula', FormulaController::class);
+
+
 
 
         // In routes/admin.php

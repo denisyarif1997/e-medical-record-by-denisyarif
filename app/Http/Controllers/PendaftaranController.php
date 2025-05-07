@@ -16,6 +16,7 @@ class PendaftaranController extends Controller
     public function index()
     {
         $pendaftarans = Pendaftaran::getAll(); // Mengambil semua data pendaftaran
+        // dd($pendaftarans);
         return view('admin.pendaftaran.index', compact('pendaftarans')); // Mengirim data ke view
     }
 

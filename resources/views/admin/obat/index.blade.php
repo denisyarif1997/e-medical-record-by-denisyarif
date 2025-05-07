@@ -18,6 +18,7 @@
                         <th>Kategori</th>
                         <th>Formula</th>
                         <th>Harga Beli</th>
+                        <th>Harga Jual</th>
                         <th>Stok</th>
                         <th>Satuan</th>
                         <th>Aksi</th>
@@ -33,8 +34,9 @@
                             <td>{{ $obat->kategori }}</td>
                             <td>{{ $obat->nama_formula }}</td> <!-- Assuming formula relation is set -->
                             <td>{{ number_format($obat->harga_beli, 0, ',', '.') }}</td>
+                            <td>{{ number_format($obat->harga_jual, 0, ',', '.') }}</td>
                             <td>{{ $obat->stok }}</td>
-                            <td>{{ $obat->satuan }}</td>
+                            <td>{{ $obat->satuan_obat }}</td>
                             <td>
                                 <a href="{{ route('admin.obat.edit', $obat->id) }}" class="btn btn-sm btn-primary">Edit</a>
                                 <form action="{{ route('admin.obat.destroy', $obat->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?')">

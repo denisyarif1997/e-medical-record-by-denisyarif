@@ -93,8 +93,8 @@
                 </a>
             </li>
 
-            <li class="nav-item has-treeview {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') ? 'active' : '' }}">
+            <li class="nav-item has-treeview {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') || Route::is('admin.satuan_obat.index') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') || Route::is('admin.satuan_obat.index') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>
                         Master Data
@@ -123,13 +123,37 @@
                             <span class="badge badge-success right">{{ $SpesialisCount }}</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.obat.index') }}" class="nav-link {{ Route::is('admin.obat.index') ? 'active' : '' }}">
+                    <li class="nav-item has-treeview {{ Route::is('admin.obat.*') || Route::is('admin.satuan_obat.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ Route::is('admin.obat.*') || Route::is('admin.satuan_obat.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-pills"></i>
-                            <p>Data Obat</p>
-                            <span class="badge badge-success right">{{ $DataObatCount }}</span>
+                            <p>
+                                Data Obat
+                                <i class="right fas fa-angle-left"></i>
+                                <span class="badge badge-success right">{{ $DataObatCount }}</span>
+                            </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.obat.index') }}" class="nav-link {{ Route::is('admin.obat.index') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Barang Farmasi</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.satuan_obat.index') }}" class="nav-link {{ Route::is('admin.satuan_obat.*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Data Satuan</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.formula.index') }}" class="nav-link {{ Route::is('admin.formula.*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Formula</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+                    
                     <li class="nav-item">
                         <a href="{{ route('admin.asuransi.index') }}" class="nav-link {{ Route::is('admin.asuransi.index') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-umbrella"></i>

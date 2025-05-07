@@ -36,16 +36,16 @@
                             <td>{{ $askep->nama_asuransi }}</td>
                             <td>{{ $askep->no_asuransi }}</td>
                             <td>
-                                @if($askep->status == 1)
-                                    <span class="badge badge-success">Aktif</span>
-                                @elseif($askep->status == 2)
-                                    <span class="badge badge-danger">Batal</span>
+                                @if(!is_null($askep->id_asemen))
+                                    <span class="badge badge-success">Sudah Asesmen</span>
                                 @else
-                                    <span class="badge badge-secondary">Non Aktif</span>
+                                    <span class="badge badge-danger">Belum Asesmen</span>
                                 @endif
+
                             </td>
                             <td>
-                                <a href="{{ route('admin.asesmen_perawat.create', encrypt($askep->id)) }}" class="btn btn-sm btn-primary">Pilih</a>
+                                <a href="{{ route('admin.asesmen_perawat.createWithId', $askep->id) }}"
+                                    class="btn btn-sm btn-primary">Pilih</a>
                             </td>
                         </tr>
                     @endforeach
@@ -60,7 +60,7 @@
                 $('#askepTable').DataTable({
                     paging: true,
                     searching: true,
-                    ordering: true,
+                    ordering: false,
                     responsive: true
                 });
             });

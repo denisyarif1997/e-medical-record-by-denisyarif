@@ -22,7 +22,8 @@ class ObatController extends Controller
     public function create()
     {   
         $formulas = Obat::getWithFormula(); // Adjusted to not require an $id
-        return view('admin.obat.create', compact('formulas'));
+        $satuans = Obat::getSatuanObat();
+        return view('admin.obat.create', compact('formulas','satuans'));
     }
 
     // Menyimpan data obat baru

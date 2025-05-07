@@ -13,19 +13,7 @@
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ $category }}</h3>
-                    <p>Total Categories</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-list-alt"></i>
-                </div>
-                <a href="{{ route('admin.category.index') }}" class="small-box-footer">View <i
-                        class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
+        
         <div class="col-lg-3 col-6">
             <div class="small-box bg-primary">
                 <div class="inner">
@@ -36,6 +24,19 @@
                     <i class="fas fas fa-th"></i>
                 </div>
                 <a href="{{ route('admin.pendaftaran.index') }}" class="small-box-footer">View <i
+                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>{{ $dokterCount }}</h3>
+                    <p>Jumlah Dokter</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fas fa-th"></i>
+                </div>
+                <a href="{{ route('admin.dokter.index') }}" class="small-box-footer">View <i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>

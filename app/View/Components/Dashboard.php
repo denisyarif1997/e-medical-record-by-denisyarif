@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Collection;
 use App\Models\Product;
 use App\Models\User;
+
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -19,28 +20,31 @@ class Dashboard extends Component
     public function __construct()
     {
         $user = User::count();
-        view()->share('user',$user);
-        
+        view()->share('user', $user);
+
         $category = Category::count();
-        view()->share('category',$category);
-        
+        view()->share('category', $category);
+
         $product = Product::count();
-        view()->share('product',$product);
-        
+        view()->share('product', $product);
+
         $collection = Collection::count();
-        view()->share('collection',$collection);
+        view()->share('collection', $collection);
 
         $pasientidakbatal = DB::selectOne("
     SELECT COUNT(*) as total 
     FROM pendaftaran 
     WHERE deleted_at IS NULL AND status = '1'
 ")->total;
-        view()->share('pasientidakbatal',$pasientidakbatal);
+        view()->share('pasientidakbatal', $pasientidakbatal);
 
         $pasienbatal = DB::table('pendaftaran')->whereNull('deleted_at')
-        ->where('status', '2') 
-        ->count();
-        view()->share('pasienbatal',$pasienbatal);
+            ->where('status', '2')
+            ->count();
+        view()->share('pasienbatal', $pasienbatal);
+
+        $dokterCount = DB::table('dokters')->whereNull('deleted_at')->count();
+        view()->share ('dokterCount', $dokterCount);
     }
 
     /**

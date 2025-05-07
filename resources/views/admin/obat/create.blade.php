@@ -57,7 +57,14 @@
 
                 <div class="form-group">
                     <label for="satuan">Satuan</label>
-                    <input type="text" name="satuan" class="form-control" value="{{ old('satuan') }}">
+                    <select name="satuan" class="form-control" required>
+                        <option value="">Pilih Satuan</option>
+                        @foreach($satuans as $satuan)
+                            <option value="{{ $satuan->id }}" {{ old('satuan') == $satuan->id ? 'selected' : '' }}>
+                                {{ $satuan->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-success">Simpan</button>

@@ -13,25 +13,25 @@ class Obat extends Model
     protected $table = 'master_obat';
 
     protected $fillable = [
-        'kode_obat', 
-        'nama_obat', 
-        'bentuk_sediaan', 
-        'golongan', 
-        'kategori', 
-        'formula_id', 
-        'stok', 
-        'satuan', 
-        'harga_beli', 
+        'kode_obat',
+        'nama_obat',
+        'bentuk_sediaan',
+        'golongan',
+        'kategori',
+        'formula_id',
+        'stok',
+        'satuan',
+        'harga_beli',
         'status'
     ];
 
     // Relasi ke tabel formula (jika menggunakan formula_id sebagai foreign key)
     public static function getWithFormula()
-{
-    return DB::select("
+    {
+        return DB::select("
         SELECT * FROM formula where deleted_at is null
     ");
-}
+    }
 
 
 
@@ -51,15 +51,17 @@ class Obat extends Model
             SELECT 
                 m.*, 
                 f.nama AS nama_formula,
+                s.nama AS satuan_obat,
                 f.faktor,
                 (m.harga_beli * f.faktor) AS harga_jual
             FROM master_obat m
             LEFT JOIN formula f ON m.formula_id = f.id
+            left join satuan_obat s ON m.satuan = s.id
             WHERE m.deleted_at IS NULL
             ORDER BY m.id DESC
         ");
     }
-    
+
 
     public static function insert($data)
     {
@@ -81,7 +83,7 @@ class Obat extends Model
     }
     public static function findById($id)
     {
-    $result = DB::select("
+        $result = DB::select("
         SELECT 
             mo.*, 
             f.nama AS formula_name
@@ -90,12 +92,12 @@ class Obat extends Model
         WHERE mo.id = ?
     ", [$id]);
 
-    return $result ? $result[0] : null;
+        return $result ? $result[0] : null;
     }
 
     public static function updateById($id, $data)
-{
-    DB::update("
+    {
+        DB::update("
     UPDATE master_obat
     SET 
         nama_obat = ?, 
@@ -109,24 +111,54 @@ class Obat extends Model
         updated_at = NOW()
     WHERE id = ?
 ", [
-    $data['nama_obat'],
-    $data['formula_id'],
-    $data['harga_beli'],
-    $data['stok'],
-    $data['bentuk_sediaan'],
-    $data['golongan'],
-    $data['kategori'],
-    $data['updated_user'],
-    $id
-]);
+            $data['nama_obat'],
+            $data['formula_id'],
+            $data['harga_beli'],
+            $data['stok'],
+            $data['bentuk_sediaan'],
+            $data['golongan'],
+            $data['kategori'],
+            $data['updated_user'],
+            $id
+        ]);
 
-}
+    }
 
-public static function deleteById($id)
-{
-    DB::delete("update master_obat set deleted_at = now() where id = ?", [$id]);
-}
+    public static function deleteById($id)
+    {
+        DB::delete("update master_obat set deleted_at = now() where id = ?", [$id]);
+    }
 
+    public static function getSatuanObat()
+    {
+        return DB::select("
+        SELECT * FROM satuan_obat
+    ");
 
+    }
 
+    public static function insertSatuan($dataSatuan)
+    {
+    DB::insert("
+    INSERT INTO satuan_obat (nama, created_at, updated_at)
+    VALUES (?, NOW(), NOW())
+    ", [
+        $dataSatuan['nama']
+    ]); 
+    }
+
+    public static function updateSatuan($id, $data)
+    {
+        DB::update("
+        UPDATE satuan_obat
+        SET 
+            nama = ?, 
+            updated_at = NOW()
+        WHERE id = ?
+    ", [
+            $data['nama'],
+            $id
+        ]);
+    }
+    
 }

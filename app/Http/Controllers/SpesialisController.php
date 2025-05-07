@@ -45,7 +45,7 @@ class SpesialisController extends Controller
 
     public function edit($id)
     {
-        $id = Crypt::decrypt($id);
+        $id = Crypt::decrypt(payload: $id);
         $spesialis = DB::table('spesialis')->where('id', $id)->first();
         return view('admin.spesialis.edit', compact('spesialis'));
     }

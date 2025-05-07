@@ -4,6 +4,9 @@ use App\Http\Controllers\LoginWithOTPController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\AsesmenPerawatController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +52,8 @@ Route::prefix('/otp')->middleware('guest')->name('otp.')->controller(LoginWithOT
 // route pendaftaran
 Route::get('pendaftaran/cari_pasien', [PendaftaranController::class, 'cariPasien'])->name('admin.pendaftaran.cari_pasien');
 Route::post('pendaftaran/{id}/cancel', [PendaftaranController::class, 'cancelRegis'])->name('admin.pendaftaran.cancelVisit');
+Route::get('/asesmen_perawat/create/{id}', [AsesmenPerawatController::class, 'createWithId'])->name('admin.asesmen_perawat.createWithId');
+
 
 
 
