@@ -8,7 +8,7 @@ use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PoliklinikController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProcedureController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanObatController;
 use App\Http\Controllers\SpesialisController;
@@ -16,8 +16,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AsuransiController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCateoryController;
 use App\Http\Controllers\AsesmenPerawatController;
+use App\Http\Controllers\JsProcedureController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -43,6 +45,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::resource('asesmen_perawat', AsesmenPerawatController::class);
         Route::resource('satuan_obat', SatuanObatController::class);
         Route::resource('formula', FormulaController::class);
+        Route::resource('procedures', ProcedureController::class);
+        Route::resource('js_procedures', JsProcedureController::class);
+
+
+
 
 
 

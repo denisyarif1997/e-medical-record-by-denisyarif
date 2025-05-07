@@ -93,8 +93,8 @@
                 </a>
             </li>
 
-            <li class="nav-item has-treeview {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') || Route::is('admin.satuan_obat.index') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') || Route::is('admin.satuan_obat.index') ? 'active' : '' }}">
+            <li class="nav-item has-treeview {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') || Route::is('admin.satuan_obat.index')|| Route::is('admin.procedures.index') || Route::is('admin.js_procedures.index')  ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Route::is('admin.dokter.index') || Route::is('admin.spesialis.index') || Route::is('admin.asuransi.index') || Route::is('admin.poliklinik.index') || Route::is('admin.obat.index') || Route::is('admin.satuan_obat.index') || Route::is('admin.procedures.index') || Route::is('admin.js_procedures.index')? 'active' : '' }}">
                     <i class="nav-icon fas fa-database"></i>
                     <p>
                         Master Data
@@ -122,6 +122,29 @@
                             <p>Spesialis</p>
                             <span class="badge badge-success right">{{ $SpesialisCount }}</span>
                         </a>
+                    </li>
+                    <li class="nav-item has-treeview {{ Route::is('admin.procedures.*') || Route::is('admin.js_procedures.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ Route::is('admin.procedures.*') || Route::is('admin.js_procedures.*') ? 'active' : '' }}">
+                            <i class="fas fa-file-invoice-dollar nav-icon"></i>                            <p>
+                                Data Harga
+                                <i class="right fas fa-angle-left"></i>
+                                {{-- <span class="badge badge-success right">{{ $DataObatCount }}</span> --}}
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.procedures.index') }}" class="nav-link {{ Route::is('admin.procedures.index') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Master Procedure Harga</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.js_procedures.index') }}" class="nav-link {{ Route::is('admin.satuan_obat.*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Jenis Procedure</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item has-treeview {{ Route::is('admin.obat.*') || Route::is('admin.satuan_obat.*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ Route::is('admin.obat.*') || Route::is('admin.satuan_obat.*') ? 'active' : '' }}">

@@ -13,9 +13,12 @@ use App\Models\Pasien;
 
 class PendaftaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pendaftarans = Pendaftaran::getAll(); // Mengambil semua data pendaftaran
+
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $pendaftarans = Pendaftaran::getAll($tanggalAwal, $tanggalAkhir);
         // dd($pendaftarans);
         return view('admin.pendaftaran.index', compact('pendaftarans')); // Mengirim data ke view
     }

@@ -56,9 +56,16 @@
                     <input type="number" name="stok" class="form-control" value="{{ $obat->stok }}" required>
                 </div>
 
-                <div class="form-group">
+                 <div class="form-group">
                     <label for="satuan">Satuan</label>
-                    <input type="text" name="satuan" class="form-control" value="{{ $obat->satuan }}">
+                    <select name="satuan" class="form-control" required>
+                        <option value="">Pilih Satuan</option>
+                        @foreach($satuan as $satuans)
+                            <option value="{{ $satuans->id }}" {{ $obat->satuan == $satuans->id ? 'selected' : '' }}>
+                                {{ $satuans->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update</button>

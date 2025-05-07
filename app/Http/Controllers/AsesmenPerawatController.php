@@ -11,9 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class AsesmenPerawatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = AsesmenPerawat::getRegisAskep(); // Pastikan metode ini ada di model
+
+        $tanggalAwal = $request->input('tanggal_awal');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        $data = AsesmenPerawat::getRegisAskep($tanggalAwal, $tanggalAkhir);
         
         return view('admin.asesmen_perawat.index', compact('data'));
     }

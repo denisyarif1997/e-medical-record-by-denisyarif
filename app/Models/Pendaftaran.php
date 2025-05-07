@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\DB;
 
 class Pendaftaran
 {
-    public static function getAll()
+    public static function getAll($tanggalAwal = null, $tanggalAkhir = null)
     {
+        $tanggalAwal ??= date('Y-m-d');
+        $tanggalAkhir ??= date('Y-m-d');
+    
         return DB::select("
             SELECT 
                 p.*,
@@ -22,10 +25,11 @@ class Pendaftaran
             LEFT JOIN dokters d ON p.dokter_id = d.id
             LEFT JOIN asuransi a ON p.id_asuransi = a.id
             WHERE p.deleted_at IS NULL
+            AND DATE(p.created_at) BETWEEN ? AND ?
             ORDER BY p.created_at DESC
-        ");
+        ", [$tanggalAwal, $tanggalAkhir]); // ← PARAMETER WAJIB DITAMBAHKAN
     }
-
+    
     public static function findById($id)
     {
         $data = DB::select("

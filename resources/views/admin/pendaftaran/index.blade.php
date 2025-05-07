@@ -9,6 +9,26 @@
             </div>
         </div>
         <div class="card-body">
+
+            <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="tanggal_awal">Tanggal Awal</label>
+            <input type="date" name="tanggal_awal" id="tanggal_awal" class="form-control"
+                value="{{ request('tanggal_awal', date('Y-m-d')) }}">
+        </div>
+        <div class="col-md-3">
+            <label for="tanggal_akhir">Tanggal Akhir</label>
+            <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control"
+                value="{{ request('tanggal_akhir', date('Y-m-d')) }}">
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
             <table class="table table-striped" id="pendaftaranTable">
                 <thead>
                     <tr>

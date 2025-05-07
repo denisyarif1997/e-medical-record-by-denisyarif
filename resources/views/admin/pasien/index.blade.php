@@ -1,16 +1,25 @@
 <x-admin>
     @section('title', 'Pasien')
 
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Data Pasien</h3>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title"><i class="fas fa-users"></i> Data Pasien</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.pasien.create') }}" class="btn btn-sm btn-info">Pasien Baru</a>
+                <a href="{{ route('admin.pasien.create') }}" class="btn btn-sm btn-light">
+                    <i class="fas fa-user-plus"></i> Pasien Baru
+                </a>
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-striped" id="pasienTable">
-                <thead>
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <table class="table table-hover table-bordered" id="pasienTable">
+                <thead class="table-primary">
                     <tr>
                         <th>No RM</th>
                         <th>NIK</th>
@@ -21,7 +30,7 @@
                         <th>Penanggung</th>
                         <th>Asuransi</th>
                         <th>No Asuransi</th>
-                        <th>Aksi</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +39,7 @@
                         <td>{{ $pasien->no_rekam_medis }}</td>
                         <td>{{ $pasien->nik }}</td>
                         <td>{{ $pasien->nama }}</td>
-                        <td>
+                        <td class="text-center">
                             @if($pasien->jenis_kelamin == 'P')
                                 <i class="fas fa-female text-pink"></i> 
                             @elseif($pasien->jenis_kelamin == 'L')
@@ -39,23 +48,23 @@
                                 -
                             @endif
                         </td>
-                        
-
                         <td>
                             {{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->diff(now())->format('%y tahun %m bulan %d hari') }}
                         </td>
-                        
                         <td>{{ $pasien->no_hp }}</td>
                         <td>{{ $pasien->penanggung }}</td>
                         <td>{{ $pasien->nama_asuransi }}</td>
                         <td>{{ $pasien->no_asuransi }}</td>
-
-                        <td>
-                            <a href="{{ route('admin.pasien.edit', encrypt($pasien->id)) }}" class="btn btn-sm btn-primary">Edit</a>
-                            <form action="{{ route('admin.pasien.destroy', encrypt($pasien->id)) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus data pasien ini?')">
+                        <td class="text-center">
+                            <a href="{{ route('admin.pasien.edit', encrypt($pasien->id)) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form action="{{ route('admin.pasien.destroy', encrypt($pasien->id)) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus data pasien ini?')">
                                 @method('DELETE')
                                 @csrf
-                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -73,6 +82,15 @@
                     "searching": true,
                     "ordering": false,
                     "responsive": true,
+                    "language": {
+                        "search": "Cari:",
+                        "lengthMenu": "Tampilkan _MENU_ data",
+                        "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                        "paginate": {
+                            "next": "Berikutnya",
+                            "previous": "Sebelumnya"
+                        }
+                    }
                 });
             });
         </script>

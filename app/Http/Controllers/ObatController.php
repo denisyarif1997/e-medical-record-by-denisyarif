@@ -41,6 +41,7 @@ class ObatController extends Controller
             'satuan' => 'nullable|string|max:50',
         ]);
     
+        // dd($data);
         $data['inserted_user'] = Auth::user()->name ?? 'admin';
         $data['updated_user'] = Auth::user()->name ?? 'admin';
     
@@ -68,14 +69,16 @@ class ObatController extends Controller
 
     // Ambil semua data formula untuk dropdown
     $formulas = DB::table('formula')->whereNull('deleted_at')->get();
+    $satuan = Obat::getSatuanObat();
 
-    return view('admin.obat.edit', compact('obat', 'formulas', 'formula'));
+    return view('admin.obat.edit', compact('obat', 'formulas', 'formula','satuan'));
 }
 
 
     // Mengupdate data obat
     public function update($id, Request $request)
 {
+    
     $data = $request->validate([
             'kode_obat' => 'required|string|max:255',
             'nama_obat' => 'required|string|max:255',
@@ -89,6 +92,7 @@ class ObatController extends Controller
     ]);
 
     $data['updated_user'] = Auth::user()->name ?? 'admin';
+    // dd($data);
 
     Obat::updateById($id, $data);
 

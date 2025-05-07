@@ -66,14 +66,29 @@ class Obat extends Model
     public static function insert($data)
     {
         DB::insert("
-            INSERT INTO master_obat (nama_obat, kode_obat, bentuk_sediaan, golongan, kategori, satuan, harga_beli, formula_id, inserted_user, updated_user, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+            INSERT INTO master_obat (
+                nama_obat, 
+                kode_obat, 
+                bentuk_sediaan, 
+                golongan, 
+                kategori, 
+                stok, 
+                satuan, 
+                harga_beli, 
+                formula_id, 
+                inserted_user, 
+                updated_user, 
+                created_at, 
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ", [
             $data['nama_obat'],
             $data['kode_obat'],
             $data['bentuk_sediaan'],
             $data['golongan'],
             $data['kategori'],
+            $data['stok'],
             $data['satuan'],
             $data['harga_beli'],
             $data['formula_id'],
@@ -81,7 +96,7 @@ class Obat extends Model
             $data['updated_user'],
         ]);
     }
-    public static function findById($id)
+        public static function findById($id)
     {
         $result = DB::select("
         SELECT 
@@ -107,6 +122,7 @@ class Obat extends Model
         bentuk_sediaan = ?,
         golongan = ?,
         kategori = ?,
+        satuan = ?,
         updated_user = ?, 
         updated_at = NOW()
     WHERE id = ?
@@ -118,6 +134,7 @@ class Obat extends Model
             $data['bentuk_sediaan'],
             $data['golongan'],
             $data['kategori'],
+            $data['satuan'],
             $data['updated_user'],
             $id
         ]);
@@ -153,10 +170,26 @@ class Obat extends Model
         UPDATE satuan_obat
         SET 
             nama = ?, 
+            bentuk_sediaan = ?,
+            golongan = ?,
+            satuan = ?,
+            kategori = ?,
+            formula_id = ?,
+            stok = ?,
+            harga_beli = ?,
+            updated_user = ?,
             updated_at = NOW()
         WHERE id = ?
     ", [
             $data['nama'],
+            $data['bentuk_sediaan'],
+            $data['golongan'],
+            $data['satuan'],
+            $data['kategori'],
+            $data['formula_id'],
+            $data['stok'],
+            $data['harga_beli'],
+            $data['updated_user'],
             $id
         ]);
     }
