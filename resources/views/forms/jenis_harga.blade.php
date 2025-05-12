@@ -1,0 +1,2 @@
+<livewire:jenis-harga-crud />
+

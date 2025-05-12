@@ -18,6 +18,26 @@
                 </div>
             @endif
 
+            <form method="GET" action="{{ route('admin.pasien.index') }}" class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="tanggal_awal"><strong>Tanggal Awal</strong></label>
+                        <input type="date" name="tanggalAwal" id="tanggalAwal" class="form-control"
+                            value="{{ request('tanggalAwal', date('Y-m-d')) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tanggal_akhir"><strong>Tanggal Akhir</strong></label>
+                        <input type="date" name="tanggalAkhir" id="tanggalAkhir" class="form-control"
+                            value="{{ request('tanggalAkhir', date('Y-m-d')) }}">
+                    </div>
+                    <div class="col-md-3 align-self-end">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                        <a href="{{ route('admin.pasien.index') }}" class="btn btn-secondary"><i class="fas fa-redo"></i> Reset</a>
+                    </div>
+                </div>
+            </form>
+            
+
             <table class="table table-hover table-bordered" id="pasienTable">
                 <thead class="table-primary">
                     <tr>

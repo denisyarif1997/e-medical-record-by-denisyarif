@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AsesmenMedisController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\DokterController;
@@ -43,6 +44,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::resource('pendaftaran', PendaftaranController::class)->except(['show']);
         Route::resource('obat', ObatController::class);
         Route::resource('asesmen_perawat', AsesmenPerawatController::class);
+        Route::resource('asesmen_medis', AsesmenMedisController::class);
         Route::resource('satuan_obat', SatuanObatController::class);
         Route::resource('formula', FormulaController::class);
         Route::resource('procedures', ProcedureController::class);

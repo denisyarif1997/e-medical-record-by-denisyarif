@@ -55,7 +55,7 @@ class AsesmenPerawatController extends Controller
 // dd($request->all());
     AsesmenPerawat::create([
         'id_regis' => $request->id_regis,
-        'asesmen' => json_encode([
+        'asesmen' => [
             'tujuan_kunjungan' => $request->tujuan_kunjungan,
             'keluhan_utama' => $request->keluhan_utama,
             'keadaan_umum' => $request->keadaan_umum,
@@ -69,7 +69,7 @@ class AsesmenPerawatController extends Controller
             'imt' => $request->imt,
             'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
             'ttv' => $request->ttv,
-        ]),
+        ],
         'inserted_user' => Auth::id(),
     ]);
 

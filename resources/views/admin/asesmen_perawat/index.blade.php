@@ -59,12 +59,23 @@
                                 <td>{{ $askep->nama_dokter }}</td>
                                 <td>{{ $askep->nama_asuransi }}</td>
                                 <td>
-                                    @if(!is_null($askep->id_asemen))
-                                        <span class="badge bg-success">Sudah Asesmen</span>
+                                    {{-- Status Asesmen Perawat --}}
+                                    @if(!is_null($askep->id_asemen_perawat))
+                                        <span class="badge bg-success">Sudah Asesmen Perawat</span>
                                     @else
-                                        <span class="badge bg-danger">Belum Asesmen</span>
+                                        <span class="badge bg-danger">Belum Asesmen Perawat</span>
+                                    @endif
+                                    <br>
+                                
+                                    {{-- Status Asesmen Medis --}}
+                                    @if(!is_null($askep->id_asesmen_medis))
+                                        <span class="badge bg-success">Sudah Asesmen Medis</span>
+                                    @else
+                                        <span class="badge bg-danger">Belum Asesmen Medis</span>
                                     @endif
                                 </td>
+                                
+                                
                                 <td class="text-center">
                                     <a href="{{ route('admin.asesmen_perawat.createWithId', $askep->id) }}" class="btn btn-sm btn-primary">
                                         <i class="fas fa-check"></i> Pilih

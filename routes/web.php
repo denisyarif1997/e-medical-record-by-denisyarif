@@ -1,12 +1,14 @@
 <?php
 
+use App\Http\Controllers\AsesmenMedisController;
 use App\Http\Controllers\LoginWithOTPController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\AsesmenPerawatController;
-
-
+use App\Livewire\AsesmenMedisCrud;
+use App\Livewire\JenisHargaCrud;
+use App\Livewire\PostComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,29 +32,23 @@ Route::prefix('/otp')->middleware('guest')->name('otp.')->controller(LoginWithOT
     Route::post('login/verification','loginWithOtp')->name('loginWithOtp');
 });
 
-// // Socialite Routes
-// Route::prefix('oauth/')->group(function(){
-//     Route::prefix('/github/login')->name('github.')->group(function(){
-//         Route::get('/',[SocialiteController::class,'redirectToGithub'])->name('login');
-//         Route::get('/callback',[SocialiteController::class,'HandleGithubCallBack'])->name('callback');
-//     });
-
-//     Route::prefix('/google/login')->name('google.')->group(function(){
-//         Route::get('/',[SocialiteController::class,'redirectToGoogle'])->name('login');
-//         Route::get('/callback',[SocialiteController::class,'HandleGoogleCallBack'])->name('callback');        
-//     });
-
-//     Route::prefix('/facebook/login')->name('facebook.')->group(function(){
-//         Route::get('/',[SocialiteController::class,'redirectToFaceBook'])->name('login');
-//         Route::get('/callback',[SocialiteController::class,'HandleFaceBookCallBack'])->name('callback');
-//     });
-// });
 
 
 // route pendaftaran
 Route::get('pendaftaran/cari_pasien', [PendaftaranController::class, 'cariPasien'])->name('admin.pendaftaran.cari_pasien');
 Route::post('pendaftaran/{id}/cancel', [PendaftaranController::class, 'cancelRegis'])->name('admin.pendaftaran.cancelVisit');
+// route asesmen
 Route::get('/asesmen_perawat/create/{id}', [AsesmenPerawatController::class, 'createWithId'])->name('admin.asesmen_perawat.createWithId');
+Route::get('/asesmen_medis/create/{id}', [AsesmenMedisController::class, 'createWithId'])->name('admin.asesmen_medis.createWithId');
+// get diagnosa
+
+// livewire routes
+Route::get('/asesmen-medis', AsesmenMedisCrud::class)->name('admin.asesmen_medis.index');
+// routes/web.php
+Route::get('/jenis-harga', JenisHargaCrud::class)->name('forms.jenis_harga');
+Route::get('/post', PostComponent::class)->name('');
+
+
 
 
 

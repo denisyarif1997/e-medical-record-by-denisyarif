@@ -51,7 +51,9 @@ class AsesmenPerawat extends Model
                 pol.nama AS nama_poli,
                 d.nama AS nama_dokter,
                 a.nama AS nama_asuransi,
-                ap.id AS id_asemen,
+                ap.id AS id_asemen_perawat,
+                ap.deleted_at as deleted_at_perawat,
+                am.id as id_asesmen_medis,
                 p.id AS id_regis
             FROM
                 pendaftaran p
@@ -60,6 +62,7 @@ class AsesmenPerawat extends Model
             LEFT JOIN dokters d ON p.dokter_id = d.id
             LEFT JOIN asuransi a ON p.id_asuransi = a.id
             LEFT JOIN asesmen_perawat ap ON p.id = ap.id_regis 
+            left join asesmen_medis am on p.id = am.id_regis 
             WHERE
                 p.deleted_at IS NULL
                 AND p.status = '1'

@@ -8,44 +8,50 @@ use App\Models\Asuransi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class PasienController extends Controller
 {
-    public function index()
-{
-    $pasiens = DB::select('
-   SELECT p.*, a.nama as nama_asuransi
-    FROM pasiens p
-    JOIN asuransi a ON p.asuransi_id = a.id
-    where p.deleted_at is null and a.deleted_at is null
-    ORDER BY p.id DESC
-');
+    public function index(Request $request)
+    {
+        $tanggalAwal = $request->input('tanggalAwal', date('Y-m-d'));
+        $tanggalAkhir = $request->input('tanggalAkhir', date('Y-m-d'));
 
-    return view('admin.pasien.index', compact('pasiens')); // Kirim data pasien ke view
+        $pasiens = DB::select('
+            SELECT p.*, a.nama as nama_asuransi
+            FROM pasiens p
+            JOIN asuransi a ON p.asuransi_id = a.id
+            WHERE p.deleted_at IS NULL AND a.deleted_at IS NULL
+            AND DATE(p.created_at) BETWEEN ? AND ?
+            ORDER BY p.id DESC
+        ', [$tanggalAwal, $tanggalAkhir]);
+
+        return view('admin.pasien.index', compact('pasiens', 'tanggalAwal', 'tanggalAkhir'));
 }
 
 
-    public function create()
+        public function create()
+        {
+            
+
+            $asuransis = DB::select('select * from asuransi where deleted_at is null    ');
+            return view('admin.pasien.create',compact('asuransis'));
+        }
+
+        public function store(Request $request)
     {
-        
-
-        $asuransis = DB::select('select * from asuransi where deleted_at is null    ');
-        return view('admin.pasien.create',compact('asuransis'));
-    }
-
-    public function store(Request $request)
-{
-    $request->validate([
-        'nik' => 'nullable|string|max:50',
-        'nama' => 'required|string|max:255',
-        'jenis_kelamin' => 'required|in:L,P',
-        'tanggal_lahir' => 'nullable|date',
-        'alamat' => 'nullable|string',
-        'no_hp' => 'nullable|string|max:20',
-        'penanggung' => 'nullable|string|max:100',
-        'asuransi_id' => 'nullable|integer',
-        'no_asuransi' => 'nullable|string|max:100',
+        $request->validate([
+            'nik' => 'nullable|string|max:50',
+            'nama' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tanggal_lahir' => 'nullable|date',
+            'alamat' => 'nullable|string',
+            'no_hp' => 'nullable|string|max:20',
+            'penanggung' => 'nullable|string|max:100',
+            'asuransi_id' => 'nullable|integer',
+            'no_asuransi' => 'nullable|string|max:100',
     ]);
 
     

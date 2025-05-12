@@ -12,9 +12,9 @@
                     @csrf
                     @method('PUT')
 
-                    {{-- @php
+                    @php
                         $a = json_decode($asesmen->asesmen, true);
-                    @endphp --}}
+                    @endphp
 
                     {{-- Info Pasien --}}
                     <div class="row">
