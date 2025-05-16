@@ -43,8 +43,8 @@ Route::get('/asesmen_medis/create/{id}', [AsesmenMedisController::class, 'create
 // get diagnosa
 
 // livewire routes
-Route::get('/asesmen-medis', AsesmenMedisCrud::class)->name('admin.asesmen_medis.index');
-// routes/web.php
+Route::get('/asesmen-medis', AsesmenMedisCrud::class)->name('forms.asesmen_medis');
+
 Route::get('/jenis-harga', JenisHargaCrud::class)->name('forms.jenis_harga');
 Route::get('/post', PostComponent::class)->name('');
 

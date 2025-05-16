@@ -38,8 +38,8 @@
             <ul class="nav nav-treeview">
                 <!-- Sub-menu Asesmen Perawat -->
                 <li class="nav-item">
-                    <a href="{{ route('admin.asesmen_medis.index') }}"
-                        class="nav-link {{ Route::is('admin.asesmen_medis.index.*') ? 'active' : '' }}">
+                    <a href="{{ route('forms.asesmen_medis') }}"
+                        class="nav-link {{ Route::is('forms.asesmen_medis.*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Asesmen Medis</p>
                     </a>

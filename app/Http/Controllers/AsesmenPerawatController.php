@@ -50,7 +50,7 @@ class AsesmenPerawatController extends Controller
         'berat_badan' => 'required|string',
         'imt' => 'required|string',
         'pemeriksaan_fisik' => 'nullable|string',
-        'ttv' => 'nullable|array',
+        // 'ttv' => 'nullable|array',
     ]);
 // dd($request->all());
     AsesmenPerawat::create([
@@ -68,7 +68,7 @@ class AsesmenPerawatController extends Controller
             'berat_badan' => $request->berat_badan,
             'imt' => $request->imt,
             'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
-            'ttv' => $request->ttv,
+            // 'ttv' => $request->ttv,
         ],
         'inserted_user' => Auth::id(),
     ]);
@@ -82,7 +82,7 @@ class AsesmenPerawatController extends Controller
 {
     // Ambil data asesmen perawat berdasarkan ID
     $asesmen = DB::table('asesmen_perawat')->where('id', $id)->first();
-    $asesmen->asesmen = json_decode($asesmen->asesmen, true);
+    // $asesmen->asesmen = json_decode($asesmen->asesmen, true);
     // dd(json_decode($asesmen->asesmen, true));
 
     // Ambil juga data registrasi terkait, jika perlu ditampilkan
@@ -102,6 +102,7 @@ class AsesmenPerawatController extends Controller
         ->where('p.id', $asesmen->id_regis)
         ->first();
         
+        // dd($asesmen);
 
     return view('admin.asesmen_perawat.edit', compact('asesmen', 'regis'));
 }
