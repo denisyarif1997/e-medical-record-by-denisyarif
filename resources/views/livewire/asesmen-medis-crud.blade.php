@@ -200,9 +200,27 @@
     @endif
 
     {{-- Tabel Pasien --}}
+    @if (!$id_regis)
     <div class="card">
         <div class="card-header bg-info text-white">
-            Pilih Pasien
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    Pilih Pasien
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-2">
+                        <div class="col">
+                            <input type="date" wire:model.lazy="startDate" class="form-control form-control-sm" placeholder="Tanggal Mulai">
+                        </div>
+                        <div class="col">
+                            <input type="date" wire:model.lazy="endDate" class="form-control form-control-sm" placeholder="Tanggal Akhir">
+                        </div>
+                        {{-- <div class="col-auto">
+                            <button wire:click="filterByDate" class="btn btn-light btn-sm">Filter</button>
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body table-responsive">
             <table class="table table-hover table-bordered" id="askepTable">
@@ -223,7 +241,7 @@
                     @forelse ($pasiens as $pasien)
                         <tr>
                             <td>{{ $pasien->id_regis }}</td>
-                            <td>{{ $data->nama_pasien }}</td>
+                            <td>{{ $pasien->nama_pasien }}</td>
                             <td>{{ $pasien->no_rekam_medis }}</td>
                             <td>{{ $pasien->nama_poli }}</td>
                             <td>{{ $pasien->nama_dokter }}</td>
@@ -263,6 +281,7 @@
             </table>
         </div>
     </div>
+    @endif
 </div>
 
 

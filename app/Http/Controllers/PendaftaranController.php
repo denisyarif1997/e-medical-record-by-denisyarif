@@ -173,10 +173,17 @@ public function update(Request $request, $id)
         $pasiens = collect(); // kosong, tapi tetap Collection
 
         if ($search && $filterBy) {
-            $pasiens = DB::table('pasiens')
-                ->where($filterBy, 'ILIKE', "%{$search}%")
-                ->whereNull('deleted_at')
-                ->get();
+            $query = DB::table('pasiens')->whereNull('deleted_at');
+
+            if ($filterBy == 'tanggal_lahir') {
+                // Pastikan format tanggal input sesuai dengan format di database (YYYY-MM-DD)
+                // Atau lakukan konversi jika perlu
+                $query->whereDate('tanggal_lahir', $search);
+            } else {
+                $query->where($filterBy, 'ILIKE', "%{$search}%");
+            }
+            
+            $pasiens = $query->get();
         }
 
         return view('admin.pendaftaran.cari_pasien', compact('pasiens'));
