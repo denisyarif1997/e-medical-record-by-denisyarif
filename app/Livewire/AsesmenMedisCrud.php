@@ -106,7 +106,7 @@ class AsesmenMedisCrud extends Component
         // Ambil obat dan tindakan jika ada
         $this->obat = $this->asesmen['obat'] ?? [];
         $this->procedure = $this->asesmen['procedure'] ?? [];
-        dd($this->asesmen);
+        // dd($this->asesmen);
     }
     
     
