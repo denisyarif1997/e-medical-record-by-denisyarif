@@ -157,6 +157,12 @@
                         <span class="badge badge-success right">{{ $AsuransiCount }}</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('forms.diagnosa') }}" class="nav-link {{ Route::is('forms.diagnosa') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-stethoscope"></i>
+                        <p>Master Diagnosa</p>
+                    </a>
+                </li>
             </ul>
         </li>
 

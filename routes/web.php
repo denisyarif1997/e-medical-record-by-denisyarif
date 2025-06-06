@@ -9,6 +9,7 @@ use App\Http\Controllers\AsesmenPerawatController;
 use App\Livewire\AsesmenMedisCrud;
 use App\Livewire\JenisHargaCrud;
 use App\Livewire\PostComponent;
+use App\Livewire\Diagnosa;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,8 @@ Route::get('/asesmen_medis/create/{id}', [AsesmenMedisController::class, 'create
 
 // livewire routes
 Route::get('/asesmen-medis', AsesmenMedisCrud::class)->name('forms.asesmen_medis');
+Route::get('/diagnosa', Diagnosa::class)->name('forms.diagnosa');
+
 
 Route::get('/jenis-harga', JenisHargaCrud::class)->name('forms.jenis_harga');
 Route::get('/post', PostComponent::class)->name('');

@@ -5,6 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Diagnosas;
+use App\Models\Obat;
 
 class AsesmenMedisCrud extends Component
 {
@@ -14,13 +16,20 @@ class AsesmenMedisCrud extends Component
     public $pasiens = [];
     public $obat = [];
     public $procedure = [];
+    public $diagnosa = [];
+    public $diagnosaResults = [];
+    public $diagnosaSearch = [];
     public $startDate;
     public $endDate;
+    public $searchObat = [];
 
     public function mount()
     {
         $this->startDate = $this->endDate = date('Y-m-d');
         $this->loadPasiens();
+        $this->obat = [];
+        $this->diagnosa = [['type' => 'icd', 'icd' => null, 'non_icd' => '']];
+        $this->diagnosaSearch = [''];
     }
 
     public function updatedStartDate()
@@ -130,7 +139,12 @@ WHERE
         // Ambil obat dan tindakan jika ada
         $this->obat = $this->asesmen['obat'] ?? [];
         $this->procedure = $this->asesmen['procedure'] ?? [];
-        // dd($this->asesmen);
+        $this->diagnosa = $this->asesmen['diagnosa'] ?? [['type' => 'icd', 'icd' => null, 'non_icd' => '']];
+
+        // Sync search array
+        $this->diagnosaSearch = array_map(function ($d) {
+            return ($d['type'] == 'icd' && !empty($d['icd'])) ? $d['icd']['code'] . ' - ' . $d['icd']['name'] : $d['non_icd'];
+        }, $this->diagnosa);
     }
 
 
@@ -158,10 +172,14 @@ WHERE
             'id_regis' => 'required|numeric',
             'asesmen.keluhan_utama' => 'required|string|max:255',
             'asesmen.tujuan_kunjungan' => 'required|string|max:255',
+            'obat.*.qty' => 'required|integer|min:1',
+        ], [
+            'obat.*.qty.min' => 'Qty minimal 1',
         ]);
 
         $this->asesmen['obat'] = $this->obat;
         $this->asesmen['procedure'] = $this->procedure;
+        $this->asesmen['diagnosa'] = $this->diagnosa;
 
         $exists = DB::table('asesmen_medis')->where('id_regis', $this->id_regis)->exists();
 
@@ -194,16 +212,58 @@ WHERE
         $this->asesmen = [];
         $this->obat = [];
         $this->procedure = [];
+        $this->diagnosa = [['type' => 'icd', 'icd' => null, 'non_icd' => '']];
+        $this->diagnosaSearch = [''];
+        $this->diagnosaResults = [];
     }
 
     public function tambahObat()
     {
-        $this->obat[] = '';
+        $this->obat[] = [
+            'nama' => '',
+            'signa' => '',
+            'cara_pakai' => '',
+            'qty' => 1,
+        ];
     }
+    
+    public function updatedObat($value, $name)
+    {
+        // Dikosongkan, kita akan memanggil searchObat secara langsung dari view
+    }
+
+    public function searchObat($index, $query)
+    {
+        if (strlen($query) < 2) {
+            $this->searchObat[$index] = [];
+            return;
+        }
+
+        $this->searchObat[$index] = Obat::where('nama_obat', 'ILIKE', "%{$query}%")
+            ->limit(10)
+            ->pluck('nama_obat')
+            ->toArray();
+    }
+
+    public function selectObat($index, $nama)
+    {
+        $this->obat[$index]['nama'] = $nama;
+        $this->searchObat[$index] = [];
+    }
+
+    public function searchNamaObat($index, $query)
+    {
+        // Dikosongkan agar tidak ada pencarian otomatis
+    }
+
     public function hapusObat($i)
     {
         unset($this->obat[$i]);
         $this->obat = array_values($this->obat);
+        // Hapus baris kosong di akhir jika ada (dan lebih dari 1 baris)
+        while (count($this->obat) > 1 && empty($this->obat[count($this->obat) - 1]['nama'])) {
+            array_pop($this->obat);
+        }
     }
 
     public function tambahTindakan()
@@ -215,4 +275,51 @@ WHERE
         unset($this->procedure[$i]);
         $this->procedure = array_values($this->procedure);
     }
+
+    public function tambahDiagnosa()
+    {
+        $this->diagnosa[] = ['type' => 'icd', 'icd' => null, 'non_icd' => ''];
+        $this->diagnosaSearch[] = '';
+    }
+
+    public function hapusDiagnosa($index)
+    {
+        unset($this->diagnosa[$index]);
+        $this->diagnosa = array_values($this->diagnosa);
+        
+        unset($this->diagnosaSearch[$index]);
+        $this->diagnosaSearch = array_values($this->diagnosaSearch);
+        
+        if (isset($this->diagnosaResults[$index])) {
+            unset($this->diagnosaResults[$index]);
+            $this->diagnosaResults = array_values($this->diagnosaResults);
+        }
+    }
+
+    public function searchDiagnosa($index)
+    {
+        if (strlen($this->diagnosaSearch[$index] ?? '') < 2) {
+            $this->diagnosaResults[$index] = [];
+            return;
+        }
+
+        $searchTerm = "%{$this->diagnosaSearch[$index]}%";
+        $this->diagnosaResults[$index] = DB::select(
+            "SELECT code, name FROM diagnosa WHERE code ILIKE ? OR name ILIKE ? LIMIT 10",
+            [$searchTerm, $searchTerm]
+        );
+    }
+
+    public function updatedDiagnosaSearch($query)
+    {
+        // Dikosongkan agar tidak ada pencarian otomatis
+    }
+
+    public function selectIcdDiagnosa($index, $code, $name)
+    {
+        $this->diagnosa[$index]['icd'] = ['code' => $code, 'name' => $name];
+        $this->diagnosaSearch[$index] = "$code - $name";
+        $this->diagnosaResults[$index] = [];
+    }
 }
+

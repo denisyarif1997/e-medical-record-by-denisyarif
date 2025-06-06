@@ -146,6 +146,64 @@
                             </div>
                         </div>
 
+                        {{-- DIAGNOSA --}}
+                        <div class="col-12 mt-4 mb-3">
+                            <h5 class="border-bottom pb-1">Diagnosa</h5>
+                        </div>
+
+                        @foreach ($diagnosa as $index => $diag)
+                            <div class="row mb-3 p-2 border rounded">
+                                <div class="col-12 d-flex justify-content-between align-items-center mb-2">
+                                    <strong>{{ $loop->first ? 'Diagnosa Utama' : 'Diagnosa Sekunder' }}</strong>
+                                    @if (!$loop->first)
+                                        <button type="button" class="btn btn-danger btn-sm" wire:click="hapusDiagnosa({{ $index }})">Hapus</button>
+                                    @endif
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="icd_10_{{ $index }}" value="icd" wire:model.lazy="diagnosa.{{ $index }}.type">
+                                        <label class="form-check-label" for="icd_10_{{ $index }}">ICD-10</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="non_icd_{{ $index }}" value="non_icd" wire:model.lazy="diagnosa.{{ $index }}.type">
+                                        <label class="form-check-label" for="non_icd_{{ $index }}">Non-ICD</label>
+                                    </div>
+                                </div>
+
+                                @if ($diag['type'] == 'icd')
+                                    <div class="col-md-12 position-relative">
+                                        <label for="diagnosa_search_{{ $index }}">Cari Diagnosa (ICD-10)</label>
+                                        <div class="input-group">
+                                            <input type="text" id="diagnosa_search_{{ $index }}" class="form-control" placeholder="Ketik kode atau nama diagnosa..." wire:model="diagnosaSearch.{{ $index }}">
+                                            <button class="btn btn-primary" type="button" wire:click="searchDiagnosa({{ $index }})" wire:loading.attr="disabled" wire:target="searchDiagnosa({{ $index }})">
+                                                <span wire:loading.remove wire:target="searchDiagnosa({{ $index }})">Cari</span>
+                                                <span wire:loading wire:target="searchDiagnosa({{ $index }})">Mencari...</span>
+                                            </button>
+                                        </div>
+                                        @if(!empty($diagnosaResults[$index]))
+                                            <ul class="list-group position-absolute w-100" style="z-index: 100; max-height: 200px; overflow-y: auto;">
+                                                @foreach($diagnosaResults[$index] as $result)
+                                                    <li class="list-group-item list-group-item-action" wire:click="selectIcdDiagnosa({{ $index }}, '{{ $result->code }}', '{{ $result->name }}')">
+                                                        <strong>{{ $result->code }}</strong> - {{ $result->name }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="col-md-12">
+                                        <label for="diagnosa_non_icd_{{ $index }}">Diagnosa Manual</label>
+                                        <input type="text" id="diagnosa_non_icd_{{ $index }}" class="form-control" placeholder="Masukkan diagnosa manual..." wire:model.lazy="diagnosa.{{ $index }}.non_icd">
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+
+                        <div class="col-12 mt-2">
+                            <button type="button" class="btn btn-success btn-sm" wire:click="tambahDiagnosa">+ Tambah Diagnosa</button>
+                        </div>
+
                         {{-- OBAT --}}
                         <div class="col-12 mt-4 mb-3">
                             <h5 class="border-bottom pb-1">Obat</h5>
@@ -153,19 +211,47 @@
 
                         @if (!empty($obat))
                             @foreach ($obat as $index => $item)
-                                <div class="mb-2 col-md-10">
-                                    <input type="text" class="form-control" placeholder="Nama Obat" wire:model="obat.{{ $index }}">
-                                </div>
-                                <div class="mb-2 col-md-2 d-flex align-items-center">
-                                    <button type="button" class="btn btn-danger btn-sm"
-                                        wire:click="hapusObat({{ $index }})">Hapus</button>
-                                </div>
+                                @if($item['nama'] || $index == count($obat) - 1)
+                                    <div class="row mb-2 align-items-center">
+                                        <div class="col-md-4 position-relative">
+                                            <input type="text" class="form-control" placeholder="Ketik nama obat..."
+                                                wire:model.defer="obat.{{ $index }}.nama"
+                                                wire:input.debounce.300ms="searchObat({{ $index }}, $event.target.value)">
+                                            <div wire:loading wire:target="searchObat" class="position-absolute" style="top: 8px; right: 10px;">
+                                                <div class="spinner-border spinner-border-sm" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                            @if (!empty($searchObat[$index]))
+                                                <ul class="list-group position-absolute w-100" style="z-index:10; max-height:150px; overflow:auto;">
+                                                    @foreach ($searchObat[$index] as $s)
+                                                        <li class="list-group-item list-group-item-action" style="cursor:pointer;"
+                                                            wire:click="selectObat({{ $index }}, '{{ $s }}')">{{ $s }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control" placeholder="Signa" wire:model="obat.{{ $index }}.signa">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" placeholder="Cara Pakai" wire:model="obat.{{ $index }}.cara_pakai">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="number" class="form-control @error('obat.' . $index . '.qty') is-invalid @enderror" placeholder="Qty" wire:model="obat.{{ $index }}.qty" min="1">
+                                            @error('obat.' . $index . '.qty')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-center">
+                                            <button type="button" class="btn btn-danger btn-sm" wire:click="hapusObat({{ $index }})">Hapus</button>
+                                        </div>
+                                    </div>
+                                @endif
                             @endforeach
                         @endif
-
                         <div class="col-12 mb-3">
-                            <button type="button" class="btn btn-primary btn-sm" wire:click="tambahObat">+ Tambah
-                                Obat</button>
+                            <button type="button" class="btn btn-primary btn-sm" wire:click="tambahObat">+ Tambah Obat</button>
                         </div>
 
                         {{-- TINDAKAN --}}
