@@ -17,7 +17,7 @@ class AsesmenPerawatController extends Controller
         $tanggalAwal = $request->input('tanggal_awal');
         $tanggalAkhir = $request->input('tanggal_akhir');
         $data = AsesmenPerawat::getRegisAskep($tanggalAwal, $tanggalAkhir);
-        
+        // dd($data);
         return view('admin.asesmen_perawat.index', compact('data'));
     }
 

@@ -54,6 +54,7 @@ class AsesmenPerawat extends Model
                 ap.id AS id_asemen_perawat,
                 ap.deleted_at as deleted_at_perawat,
                 am.id as id_asesmen_medis,
+                am.deleted_at as asesmen_medis_deleted_at,
                 p.id AS id_regis
             FROM
                 pendaftaran p
@@ -61,11 +62,12 @@ class AsesmenPerawat extends Model
             LEFT JOIN poliklinik pol ON p.poli_id = pol.id
             LEFT JOIN dokters d ON p.dokter_id = d.id
             LEFT JOIN asuransi a ON p.id_asuransi = a.id
-            LEFT JOIN asesmen_perawat ap ON p.id = ap.id_regis 
-            left join asesmen_medis am on p.id = am.id_regis 
+            LEFT JOIN asesmen_perawat ap ON p.id = ap.id_regis
+            left join asesmen_medis am on p.id = am.id_regis AND am.deleted_at IS NULL
             WHERE
                 p.deleted_at IS NULL
                 AND p.status = '1'
+                and ap.deleted_at is null
                 AND DATE(p.created_at) BETWEEN ? AND ?
             ORDER BY
                 p.created_at DESC

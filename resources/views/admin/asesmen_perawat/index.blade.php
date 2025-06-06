@@ -60,7 +60,7 @@
                                 <td>{{ $askep->nama_asuransi }}</td>
                                 <td>
                                     {{-- Status Asesmen Perawat --}}
-                                    @if(!is_null($askep->id_asemen_perawat))
+                                    @if(!is_null($askep->id_asemen_perawat) && is_null($askep->deleted_at_perawat))
                                         <span class="badge bg-success">Sudah Asesmen Perawat</span>
                                     @else
                                         <span class="badge bg-danger">Belum Asesmen Perawat</span>
@@ -77,9 +77,17 @@
                                 
                                 
                                 <td class="text-center">
-                                    <a href="{{ route('admin.asesmen_perawat.createWithId', $askep->id) }}" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-check"></i> Pilih
-                                    </a>
+                                    @if (!is_null($askep->id_asemen_perawat) && is_null($askep->deleted_at_perawat))
+                                        <a href="{{ route('admin.asesmen_perawat.edit', $askep->id_asemen_perawat) }}"
+                                            class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    @else
+                                        <a href="{{ route('admin.asesmen_perawat.createWithId', $askep->id_regis) }}"
+                                            class="btn btn-sm btn-primary">
+                                            <i class="fas fa-plus"></i> Buat
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

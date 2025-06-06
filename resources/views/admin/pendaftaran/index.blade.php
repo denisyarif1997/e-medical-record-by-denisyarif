@@ -32,6 +32,7 @@
             <table class="table table-striped" id="pendaftaranTable">
                 <thead>
                     <tr>
+                        <th>ID Registrasi</th>
                         <th>No RM</th>
                         <th>Nama Pasien</th>
                         <th>Tanggal Daftar</th>
@@ -46,6 +47,7 @@
                 <tbody>
                     @foreach ($pendaftarans as $data)
                     <tr>
+                        <td>{{ $data->id }}</td>
                         <td>{{ $data->no_rekam_medis  }}</td>
                         <td>{{ $data->nama_pasien }}</td>
                         <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y H:i') }}</td>

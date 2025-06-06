@@ -149,7 +149,7 @@ class Obat extends Model
     public static function getSatuanObat()
     {
         return DB::select("
-        SELECT * FROM satuan_obat
+        SELECT * FROM satuan_obat where deleted_at is null
     ");
 
     }

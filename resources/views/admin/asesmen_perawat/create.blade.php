@@ -95,31 +95,31 @@
                             <h6><strong>Tanda - tanda Vital</strong></h6>
                             <div class="form-group">
                                 <label><strong>Keadaan Umum</strong> <span class="text-danger">*</span></label>
-                                <input type="text" name="keadaan_umum" class="form-control" required placeholder="Contoh: Tampak sakit ringan">
+                                <input type="text" name="keadaan_umum" class="form-control" required placeholder="Contoh: Baik">
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-6">
                                     <label><strong>Sistolik</strong> <span class="text-danger">*</span></label>
-                                    <input type="number" name="sistolik" class="form-control" placeholder="mmHg">
+                                    <input type="number" name="sistolik" class="form-control" placeholder="Contoh: 120">
                                 </div>
                                 <div class="form-group col-6">
                                     <label><strong>Diastolik</strong> <span class="text-danger">*</span></label>
-                                    <input type="number" name="diastolik" class="form-control" placeholder="mmHg">
+                                    <input type="number" name="diastolik" class="form-control" placeholder="Contoh: 80">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-6">
                                     <label><strong>Nadi</strong> <span class="text-danger">*</span></label>
-                                    <input type="number" name="nadi" class="form-control" placeholder="x/menit">
+                                    <input type="number" name="nadi" class="form-control" placeholder="Contoh: 80">
                                 </div>
                                 <div class="form-group col-6">
                                     <label><strong>Pernapasan</strong></label>
-                                    <input type="number" name="pernapasan" class="form-control" placeholder="x/menit">
+                                    <input type="number" name="pernapasan" class="form-control" placeholder="Contoh: 20">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label><strong>Suhu</strong> <span class="text-danger">*</span></label>
-                                <input type="number" step="0.1" name="suhu" class="form-control" placeholder="°C">
+                                <input type="number" step="0.1" name="suhu" class="form-control" placeholder="Contoh: 36.5">
                             </div>
                         </div>
 
@@ -135,7 +135,7 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Indeks Massa Tubuh</strong> <span class="text-danger">*</span></label>
-                                <input type="text" name="imt" class="form-control" placeholder="Contoh: 16 (Underweight)" readonly>
+                                <input type="text" name="imt" class="form-control" placeholder="Input Berat Badan dan Tinggi Badan" readonly>
                             </div>
                         </div>
                     </div>
