@@ -5,11 +5,11 @@
         <button wire:click="resetFields" class="btn btn-primary">Tambah Jenis Harga</button>
     </div> --}}
 
-    @if (session()->has('message'))
+    {{-- @if (session()->has('message'))
         <div class="alert alert-success">
             {{ session('message') }}
         </div>
-    @endif
+    @endif --}}
 
     <div class="card">
         <div class="card-header">Master Jenis Harga</div>

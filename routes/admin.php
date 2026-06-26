@@ -44,7 +44,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::resource('pendaftaran', PendaftaranController::class)->except(['show']);
         Route::resource('obat', ObatController::class);
         Route::resource('asesmen_perawat', AsesmenPerawatController::class);
-        Route::resource('asesmen_medis', AsesmenMedisController::class);
+        Route::get('/asesmen_perawat/create/{id}', [AsesmenPerawatController::class, 'createWithId'])->name('asesmen_perawat.createWithId');
+        
+        Route::get('/asesmen_medis_search', [AsesmenMedisController::class, 'search'])->name('asesmen_medis.search');
         Route::resource('satuan_obat', SatuanObatController::class);
         Route::resource('formula', FormulaController::class);
         Route::resource('procedures', ProcedureController::class);

@@ -35,121 +35,116 @@ class AsesmenPerawatController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'id_regis' => 'required|exists:pendaftaran,id',
-        'tujuan_kunjungan' => 'required|string',
-        'keluhan_utama' => 'required|string',
-        'keadaan_umum' => 'required|string',
-        'sistolik' => 'required|string',
-        'diastolik' => 'required|string',
-        'nadi' => 'required|string',
-        'pernapasan' => 'required|string',
-        'suhu' => 'required|string',
-        'tinggi_badan' => 'required|string',
-        'berat_badan' => 'required|string',
-        'imt' => 'required|string',
-        'pemeriksaan_fisik' => 'nullable|string',
-        // 'ttv' => 'nullable|array',
-    ]);
-// dd($request->all());
-    AsesmenPerawat::create([
-        'id_regis' => $request->id_regis,
-        'asesmen' => [
-            'tujuan_kunjungan' => $request->tujuan_kunjungan,
-            'keluhan_utama' => $request->keluhan_utama,
-            'keadaan_umum' => $request->keadaan_umum,
-            'sistolik' => $request->sistolik,
-            'diastolik' => $request->diastolik,
-            'nadi' => $request->nadi,
-            'pernapasan' => $request->pernapasan,
-            'suhu' => $request->suhu,
-            'tinggi_badan' => $request->tinggi_badan,
-            'berat_badan' => $request->berat_badan,
-            'imt' => $request->imt,
-            'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
-            // 'ttv' => $request->ttv,
-        ],
-        'inserted_user' => Auth::id(),
-    ]);
+    {
+        // Validation for standard nursing assessment
+        $request->validate([
+            'id_regis' => 'required|exists:pendaftaran,id',
+            'tujuan_kunjungan' => 'required|string',
+            'keluhan_utama' => 'required|string',
+            'pemeriksaan_fisik' => 'nullable|string',
+            
+            // Objective / TTV
+            'keadaan_umum' => 'required|string',
+            'sistolik' => 'nullable|string',
+            'diastolik' => 'nullable|string',
+            'nadi' => 'nullable|string',
+            'pernapasan' => 'nullable|string',
+            'suhu' => 'nullable|string',
+            'tinggi_badan' => 'nullable|string',
+            'berat_badan' => 'nullable|string',
+            'imt' => 'nullable|string',
+            
+            // Additional assessment data (will be stored in JSON)
+            'riwayat_alergi' => 'nullable|string',
+            'riwayat_penyakit' => 'nullable|string',
+            'status_psikososial' => 'nullable|string',
+            'adl_status' => 'nullable|string',
+            'jatuh_risiko' => 'nullable|string',
+            'nyeri_skala' => 'nullable|string',
+            'nyeri_kualitas' => 'nullable|string',
+            'gizi_mst_1' => 'nullable|string',
+            'gizi_mst_2' => 'nullable|string',
+            'masalah_keperawatan' => 'nullable|array',
+            'rencana_keperawatan' => 'nullable|string',
+        ]);
 
-    return redirect()->route('admin.asesmen_perawat.index')->with('success', 'Data berhasil disimpan');
-}
+        $asesmenData = $request->except(['_token', 'id_regis']);
 
-    
+        AsesmenPerawat::create([
+            'id_regis' => $request->id_regis,
+            'asesmen' => $asesmenData,
+            'inserted_user' => Auth::id(),
+        ]);
+
+        return redirect()->route('admin.asesmen_perawat.index')->with('success', 'Asesmen Keperawatan berhasil disimpan');
+    }
 
     public function edit($id)
-{
-    // Ambil data asesmen perawat berdasarkan ID
-    $asesmen = DB::table('asesmen_perawat')->where('id', $id)->first();
-    // $asesmen->asesmen = json_decode($asesmen->asesmen, true);
-    // dd(json_decode($asesmen->asesmen, true));
-
-    // Ambil juga data registrasi terkait, jika perlu ditampilkan
-    $regis = DB::table('pendaftaran as p')
-        ->leftJoin('pasiens as pas', 'p.pasien_id', '=', 'pas.id')
-        ->leftJoin('dokters as d', 'p.dokter_id', '=', 'd.id')
-        ->leftJoin('poliklinik as pol', 'p.poli_id', '=', 'pol.id')
-        ->leftJoin('asuransi as a', 'p.id_asuransi', '=', 'a.id')
-        ->select(
-            'p.*',
-            'pas.no_rekam_medis',
-            'pas.nama as nama_pasien',
-            'd.nama as nama_dokter',
-            'pol.nama as nama_poli',
-            'a.nama as nama_asuransi'
-        )
-        ->where('p.id', $asesmen->id_regis)
-        ->first();
+    {
+        $asesmen = AsesmenPerawat::findOrFail($id);
         
-        // dd($asesmen);
+        // Ensure asesmen is decoded if it's a string (though cast 'array' should handle it)
+        if (is_string($asesmen->asesmen)) {
+            $asesmen->asesmen = json_decode($asesmen->asesmen, true);
+        }
 
-    return view('admin.asesmen_perawat.edit', compact('asesmen', 'regis'));
-}
+        $regis = DB::table('pendaftaran as p')
+            ->leftJoin('pasiens as pas', 'p.pasien_id', '=', 'pas.id')
+            ->leftJoin('dokters as d', 'p.dokter_id', '=', 'd.id')
+            ->leftJoin('poliklinik as pol', 'p.poli_id', '=', 'pol.id')
+            ->leftJoin('asuransi as a', 'p.id_asuransi', '=', 'a.id')
+            ->select(
+                'p.*',
+                'pas.no_rekam_medis',
+                'pas.nama as nama_pasien',
+                'd.nama as nama_dokter',
+                'pol.nama as nama_poli',
+                'a.nama as nama_asuransi'
+            )
+            ->where('p.id', $asesmen->id_regis)
+            ->first();
 
-
+        return view('admin.asesmen_perawat.edit', compact('asesmen', 'regis'));
+    }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'id_regis' => 'required|exists:pendaftaran,id',
-        'tujuan_kunjungan' => 'required|string',
-        'keluhan_utama' => 'required|string',
-        'keadaan_umum' => 'required|string',
-        'sistolik' => 'required|string',
-        'diastolik' => 'required|string',
-        'nadi' => 'required|string',
-        'pernapasan' => 'required|string',
-        'suhu' => 'required|string',
-        'tinggi_badan' => 'required|string',
-        'berat_badan' => 'required|string',
-        'imt' => 'required|string',
-        'pemeriksaan_fisik' => 'required|string',
-        'ttv' => 'nullable|array',
-    ]);
+    {
+        $request->validate([
+            'id_regis' => 'required|exists:pendaftaran,id',
+            'tujuan_kunjungan' => 'required|string',
+            'keluhan_utama' => 'required|string',
+            'pemeriksaan_fisik' => 'nullable|string',
+            'keadaan_umum' => 'required|string',
+            'sistolik' => 'nullable|string',
+            'diastolik' => 'nullable|string',
+            'nadi' => 'nullable|string',
+            'pernapasan' => 'nullable|string',
+            'suhu' => 'nullable|string',
+            'tinggi_badan' => 'nullable|string',
+            'berat_badan' => 'nullable|string',
+            'imt' => 'nullable|string',
+            'riwayat_alergi' => 'nullable|string',
+            'riwayat_penyakit' => 'nullable|string',
+            'status_psikososial' => 'nullable|string',
+            'adl_status' => 'nullable|string',
+            'jatuh_risiko' => 'nullable|string',
+            'nyeri_skala' => 'nullable|string',
+            'nyeri_kualitas' => 'nullable|string',
+            'gizi_mst_1' => 'nullable|string',
+            'gizi_mst_2' => 'nullable|string',
+            'masalah_keperawatan' => 'nullable|array',
+            'rencana_keperawatan' => 'nullable|string',
+        ]);
 
-    $asesmen = AsesmenPerawat::findOrFail($id);
-    $asesmen->update([
-        'id_regis' => $request->id_regis,
-        'asesmen' => json_encode([
-            'tujuan_kunjungan' => $request->tujuan_kunjungan,
-            'keluhan_utama' => $request->keluhan_utama,
-            'keadaan_umum' => $request->keadaan_umum,
-            'sistolik' => $request->sistolik,
-            'diastolik' => $request->diastolik,
-            'nadi' => $request->nadi,
-            'pernapasan' => $request->pernapasan,
-            'suhu' => $request->suhu,
-            'tinggi_badan' => $request->tinggi_badan,
-            'berat_badan' => $request->berat_badan,
-            'imt' => $request->imt,
-            'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
-            'ttv' => $request->ttv,
-        ]),
-        'updated_user' => Auth::id(),
-    ]);
+        $asesmen = AsesmenPerawat::findOrFail($id);
+        $asesmenData = $request->except(['_token', '_method', 'id_regis']);
 
-    return redirect()->route('admin.asesmen_perawat.index')->with('success', 'Data berhasil diperbarui');
-}
+        $asesmen->update([
+            'id_regis' => $request->id_regis,
+            'asesmen' => $asesmenData,
+            'updated_user' => Auth::id(),
+        ]);
 
+        return redirect()->route('admin.asesmen_perawat.index')->with('success', 'Asesmen Keperawatan berhasil diperbarui');
+    }
 }

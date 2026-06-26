@@ -1,183 +1,183 @@
 <x-admin>
-    @section('title', 'Edit Asesmen Perawat')
+    @section('title', 'Edit Asesmen Medis')
 
     <div class="container-fluid mt-3">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h3 class="card-title"><i class="fas fa-user-nurse"></i> Edit Asesmen Perawat</h3>
+        <div class="row">
+            {{-- Column Left: Info Pasien & Data Perawat --}}
+            <div class="col-md-5">
+                <div class="card card-primary card-outline shadow-sm">
+                    <div class="card-header">
+                        <h3 class="card-title text-sm"><i class="fas fa-info-circle"></i> Referensi Asesmen Perawat</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-borderless">
+                            <tr><th width="120">No. RM</th><td>: {{ $regis->no_rekam_medis }}</td></tr>
+                            <tr><th>Pasien</th><td>: {{ $regis->nama_pasien }}</td></tr>
+                        </table>
+                        <hr class="my-2">
+                        @if($nurse)
+                            <h6 class="text-xs font-weight-bold text-primary mb-2">VITAL SIGN (PERAWAT)</h6>
+                            <div class="row bg-light p-2 rounded mb-3">
+                                <div class="col-6">
+                                    <small>TD: <b>{{ $nurse->asesmen['sistolik'] ?? '-' }}/{{ $nurse->asesmen['diastolik'] ?? '-' }}</b></small><br>
+                                    <small>N: <b>{{ $nurse->asesmen['nadi'] ?? '-' }}</b> x/m</small>
+                                </div>
+                                <div class="col-6">
+                                    <small>Suhu: <b>{{ $nurse->asesmen['suhu'] ?? '-' }}</b> °C</small><br>
+                                    <small>IMT: <b>{{ $nurse->asesmen['imt'] ?? '-' }}</b></small>
+                                </div>
+                            </div>
+                            <small class="text-muted font-weight-bold">KELUHAN PERAWAT:</small>
+                            <p class="small mb-2">{{ $nurse->asesmen['keluhan_utama'] ?? '-' }}</p>
+                            <small class="text-muted font-weight-bold">PEMERIKSAAN FISIK PERAWAT:</small>
+                            <p class="small mb-0">{{ $nurse->asesmen['pemeriksaan_fisik'] ?? '-' }}</p>
+                        @else
+                            <div class="alert alert-warning py-1"><small>Data perawat tidak ditemukan</small></div>
+                        @endif
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body">
-                <form action="{{ route('admin.asesmen_perawat.update', $asesmen->id) }}" method="POST">
+            {{-- Column Right: Doctor's SOAP Assessment Update --}}
+            <div class="col-md-7">
+                <form action="{{ route('admin.asesmen_medis.update', $asesmen->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-
-                    @php
-                        $a = json_decode($asesmen->asesmen, true);
-                    @endphp
-
-                    {{-- Info Pasien --}}
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>Tanggal Kunjungan</strong></label>
-                                <input type="text" class="form-control" 
-                                    value="{{ \Carbon\Carbon::parse($regis->created_at)->translatedFormat('d F Y, H:i') }} WIB" 
-                                    readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>Nama Pasien</strong></label>
-                                <input type="text" class="form-control" value="{{ $regis->nama_pasien }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>ID Registrasi</strong></label>
-                                <input type="text" class="form-control" value="{{ $asesmen->id_regis }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>No Rekam Medis</strong></label>
-                                <input type="text" class="form-control" value="{{ $regis->no_rekam_medis }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>Dokter</strong></label>
-                                <input type="text" class="form-control" value="{{ $regis->nama_dokter }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>Poliklinik</strong></label>
-                                <input type="text" class="form-control" value="{{ $regis->nama_poli }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label><strong>Asuransi</strong></label>
-                                <input type="text" class="form-control" value="{{ $regis->nama_asuransi }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-
                     <input type="hidden" name="id_regis" value="{{ $asesmen->id_regis }}">
 
-                    {{-- Asesmen Input --}}
-                    <div class="form-group">
-                        <label for="tujuan_kunjungan"><strong>Tujuan Kunjungan</strong></label>
-                        <select name="tujuan_kunjungan" id="tujuan_kunjungan" class="form-control" required>
-                            <option value="">-- Pilih Tujuan Kunjungan --</option>
-                            @foreach(['Berobat', 'Kontrol', 'Konsultasi', 'Vaksinasi', 'Cek Lab', 'Lainnya'] as $tk)
-                                <option value="{{ $tk }}" {{ ($a['tujuan_kunjungan'] ?? '') == $tk ? 'selected' : '' }}>{{ $tk }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @php
+                        $s = $asesmen->asesmen['subjective'] ?? [];
+                        $o = $asesmen->asesmen['objective'] ?? [];
+                        $a = $asesmen->asesmen['assessment'] ?? [];
+                        $p = $asesmen->asesmen['plan'] ?? [];
+                        $diag = $a['diagnosa'] ?? null;
+                        $is_icd = $a['is_icd'] ?? true;
+                    @endphp
 
-                    <div class="form-group">
-                        <label for="keluhan_utama"><strong>Keluhan Utama</strong> <span class="text-danger">*</span></label>
-                        <input type="text" name="keluhan_utama" id="keluhan_utama" class="form-control" value="{{ $a['keluhan_utama'] ?? '' }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label><strong>Pemeriksaan Fisik</strong> <span class="text-danger">*</span></label>
-                        <textarea name="pemeriksaan_fisik" class="form-control" rows="3">{{ $a['pemeriksaan_fisik'] ?? '' }}</textarea>
-                    </div>
-
-                    {{-- Tanda-tanda Vital --}}
-                    <h5 class="mt-4 mb-3"><strong>Objective</strong></h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6><strong>Tanda - tanda Vital</strong></h6>
+                    {{-- Subjective --}}
+                    <div class="card card-outline card-success shadow-sm">
+                        <div class="card-header"><h3 class="card-title font-weight-bold">S - SUBJEKTIF</h3></div>
+                        <div class="card-body">
                             <div class="form-group">
-                                <label><strong>Keadaan Umum</strong> <span class="text-danger">*</span></label>
-                                <input type="text" name="keadaan_umum" class="form-control" value="{{ $a['keadaan_umum'] ?? '' }}">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-6">
-                                    <label><strong>Sistolik</strong></label>
-                                    <input type="number" name="sistolik" class="form-control" value="{{ $a['sistolik'] ?? '' }}">
-                                </div>
-                                <div class="form-group col-6">
-                                    <label><strong>Diastolik</strong></label>
-                                    <input type="number" name="diastolik" class="form-control" value="{{ $a['diastolik'] ?? '' }}">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-6">
-                                    <label><strong>Nadi</strong></label>
-                                    <input type="number" name="nadi" class="form-control" value="{{ $a['nadi'] ?? '' }}">
-                                </div>
-                                <div class="form-group col-6">
-                                    <label><strong>Pernapasan</strong></label>
-                                    <input type="number" name="pernapasan" class="form-control" value="{{ $a['pernapasan'] ?? '' }}">
-                                </div>
+                                <label>Keluhan Utama</label>
+                                <input type="text" name="keluhan_utama" class="form-control" value="{{ $s['keluhan_utama'] ?? '' }}" required>
                             </div>
                             <div class="form-group">
-                                <label><strong>Suhu</strong></label>
-                                <input type="number" step="0.1" name="suhu" class="form-control" value="{{ $a['suhu'] ?? '' }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <h6><strong>Pemeriksaan Lain</strong></h6>
-                            <div class="form-group">
-                                <label><strong>Tinggi Badan</strong></label>
-                                <input type="number" step="0.1" name="tinggi_badan" class="form-control" value="{{ $a['tinggi_badan'] ?? '' }}">
+                                <label>RPS (Riwayat Penyakit Sekarang)</label>
+                                <textarea name="rps" class="form-control" rows="3">{{ $s['rps'] ?? '' }}</textarea>
                             </div>
                             <div class="form-group">
-                                <label><strong>Berat Badan</strong></label>
-                                <input type="number" step="0.001" name="berat_badan" class="form-control" value="{{ $a['berat_badan'] ?? '' }}">
-                            </div>
-                            <div class="form-group">
-                                <label><strong>Indeks Massa Tubuh</strong></label>
-                                <input type="text" name="imt" class="form-control" value="{{ $a['imt'] ?? '' }}" readonly>
+                                <label>Riwayat Alergi</label>
+                                <input type="text" name="riwayat_alergi" class="form-control" value="{{ $s['riwayat_alergi'] ?? '' }}">
                             </div>
                         </div>
                     </div>
 
-                    <div class="text-right mt-4">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
-                        <a href="{{ route('admin.asesmen_perawat.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
+                    {{-- Objective --}}
+                    <div class="card card-outline card-primary shadow-sm mt-3">
+                        <div class="card-header"><h3 class="card-title font-weight-bold">O - OBJEKTIF</h3></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Status Lokalis / Pemeriksaan Fisik</label>
+                                <textarea name="status_lokalis" class="form-control" rows="3">{{ $o['status_lokalis'] ?? '' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Assessment --}}
+                    <div class="card card-outline card-warning shadow-sm mt-3">
+                        <div class="card-header"><h3 class="card-title font-weight-bold">A - ASSESMEN</h3></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Jenis Diagnosa</label>
+                                <div class="d-flex">
+                                    <div class="custom-control custom-radio mr-3">
+                                        <input class="custom-control-input" type="radio" id="icd" name="jenis_diagnosa" value="icd" {{ $is_icd ? 'checked' : '' }}>
+                                        <label for="icd" class="custom-control-label">ICD-10</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="non_icd" name="jenis_diagnosa" value="non_icd" {{ !$is_icd ? 'checked' : '' }}>
+                                        <label for="non_icd" class="custom-control-label">Non-ICD</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="wrapper_icd" style="{{ $is_icd ? '' : 'display:none;' }}">
+                                <div class="form-group">
+                                    <label>Cari ICD-10</label>
+                                    <select name="diagnosa_icd_id" id="diagnosa_icd_id" class="form-control select2">
+                                        @if($is_icd && $diag)
+                                            <option value="{{ $diag['id'] ?? '' }}" selected>{{ $diag['code'] ?? '' }} - {{ $diag['name'] ?? '' }}</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="wrapper_non_icd" style="{{ !$is_icd ? '' : 'display:none;' }}">
+                                <div class="form-group">
+                                    <label>Diagnosa Manual</label>
+                                    <input type="text" name="diagnosa_non_icd" class="form-control" value="{{ !$is_icd ? ($diag['name'] ?? '') : '' }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Diagnosa Sekunder</label>
+                                <textarea name="diagnosa_sekunder" class="form-control" rows="2">{{ $a['diagnosa_sekunder'] ?? '' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Plan --}}
+                    <div class="card card-outline card-info shadow-sm mt-3">
+                        <div class="card-header"><h3 class="card-title font-weight-bold">P - PLAN</h3></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Terapi / Instruksi</label>
+                                <textarea name="terapi" class="form-control" rows="4">{{ $p['terapi'] ?? '' }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Rencana Lanjutan</label>
+                                <input type="text" name="rencana_lanjutan" class="form-control" value="{{ $p['rencana_lanjutan'] ?? '' }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 mb-5 text-right">
+                        <a href="{{ route('admin.asesmen_medis.index') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Batal</a>
+                        <button type="submit" class="btn btn-primary px-4 shadow"><i class="fas fa-save"></i> Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const beratInput = document.querySelector('input[name="berat_badan"]');
-            const tinggiInput = document.querySelector('input[name="tinggi_badan"]');
-            const imtInput = document.querySelector('input[name="imt"]');
-
-            function hitungIMT() {
-                const berat = parseFloat(beratInput.value);
-                const tinggiCm = parseFloat(tinggiInput.value);
-
-                if (!isNaN(berat) && !isNaN(tinggiCm) && tinggiCm > 0) {
-                    const tinggiM = tinggiCm / 100;
-                    const imt = berat / (tinggiM * tinggiM);
-                    let kategori = '';
-
-                    if (imt < 18.5) kategori = 'Underweight';
-                    else if (imt < 25) kategori = 'Normal';
-                    else if (imt < 30) kategori = 'Overweight';
-                    else kategori = 'Obese';
-
-                    imtInput.value = `${imt.toFixed(1)} (${kategori})`;
+        $(document).ready(function() {
+            $('input[name="jenis_diagnosa"]').change(function() {
+                if (this.value === 'icd') {
+                    $('#wrapper_icd').show();
+                    $('#wrapper_non_icd').hide();
                 } else {
-                    imtInput.value = '';
+                    $('#wrapper_icd').hide();
+                    $('#wrapper_non_icd').show();
                 }
-            }
+            });
 
-            beratInput.addEventListener('input', hitungIMT);
-            tinggiInput.addEventListener('input', hitungIMT);
+            $('#diagnosa_icd_id').select2({
+                theme: 'bootstrap4',
+                ajax: {
+                    url: "{{ route('admin.asesmen_medis.search') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) { return { q: params.term }; },
+                    processResults: function(data) {
+                        return { results: data.map(i => ({ id: i.id, text: i.code+' - '+i.name })) };
+                    },
+                    cache: true
+                }
+            });
         });
     </script>
+    @endpush
 </x-admin>

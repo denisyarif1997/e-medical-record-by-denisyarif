@@ -29,103 +29,144 @@ class PasienController extends Controller
         ', [$tanggalAwal, $tanggalAkhir]);
 
         return view('admin.pasien.index', compact('pasiens', 'tanggalAwal', 'tanggalAkhir'));
-}
+    }
 
 
         public function create()
         {
             
-
             $asuransis = DB::select('select * from asuransi where deleted_at is null    ');
             return view('admin.pasien.create',compact('asuransis'));
         }
 
         public function store(Request $request)
     {
+
+        if (!empty($request->nik)) {
+        $cekNik = Pasien::whereNull('deleted_at')
+            ->where('nik', $request->nik)
+            ->exists();
+
+        if ($cekNik) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'NIK sudah digunakan.');
+        }
+    }
         $request->validate([
             'nik' => 'nullable|string|max:50',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'nullable|date',
+            'tempat_lahir' => 'nullable|string|max:100',
+            'agama' => 'nullable|string|max:50',
+            'pendidikan' => 'nullable|string|max:100',
+            'pekerjaan' => 'nullable|string|max:100',
+            'status_pernikahan' => 'nullable|string|max:50',
+            'golongan_darah' => 'nullable|string|max:5',
+            'kewarganegaraan' => 'nullable|string|max:100',
+            'suku' => 'nullable|string|max:100',
+            'bahasa' => 'nullable|string|max:100',
+            'nama_ayah' => 'nullable|string|max:255',
+            'nama_ibu' => 'nullable|string|max:255',
+            'nama_pasangan' => 'nullable|string|max:255',
+            'kontak_darurat_nama' => 'nullable|string|max:255',
+            'kontak_darurat_hubungan' => 'nullable|string|max:100',
+            'kontak_darurat_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',
+            'rt' => 'nullable|string|max:10',
+            'rw' => 'nullable|string|max:10',
+            'kelurahan' => 'nullable|string|max:100',
+            'kecamatan' => 'nullable|string|max:100',
+            'kota' => 'nullable|string|max:100',
+            'provinsi' => 'nullable|string|max:100',
             'no_hp' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:100',
             'penanggung' => 'nullable|string|max:100',
             'asuransi_id' => 'nullable|integer',
             'no_asuransi' => 'nullable|string|max:100',
-    ]);
+        ]);
 
-    
-    // Create the new Pasien
-    $pasien = Pasien::create([
-        'nik' => $request->nik,
-        'nama' => $request->nama,
-        'jenis_kelamin' => $request->jenis_kelamin,
-        'tanggal_lahir' => $request->tanggal_lahir,
-        'alamat' => $request->alamat,
-        'no_hp' => $request->no_hp,
-        'penanggung' => $request->penanggung,
-        'asuransi_id' => $request->asuransi_id,
-        'no_asuransi' => $request->no_asuransi,
-        'inserted_user' => auth()->id(),
-        'updated_user' => auth()->id(),
-    ]);
+        // Create the new Pasien
+        $pasien = Pasien::create(array_merge($request->all(), [
+            'inserted_user' => auth()->id(),
+            'updated_user' => auth()->id(),
+        ]));
 
-    // Generate no_rekam_medis based on the new Pasien ID
-    $pasien->no_rekam_medis = str_pad($pasien->id, 9, '0', STR_PAD_LEFT);
+        // Generate no_rekam_medis based on the new Pasien ID
+        $pasien->no_rekam_medis = str_pad($pasien->id, 9, '0', STR_PAD_LEFT);
+        $pasien->save();
 
-    // Save the Pasien record again to update no_rekam_medis
-    $pasien->save();
-
-    return redirect()->route('admin.pasien.index')->with('success', 'Pasien berhasil ditambahkan.');
-}
-
+        return redirect()->route('admin.pasien.index')->with('success', 'Pasien berhasil ditambahkan.');
+    }
 
     public function edit($id)
     {
         $id = Crypt::decrypt($id);
-        $asuransis = Asuransi::getAll();
+        $asuransis = DB::select('select * from asuransi where deleted_at is null');
         $pasien = Pasien::findOrFail($id);
-        return view('admin.pasien.edit', compact('pasien','asuransis'));
+        return view('admin.pasien.edit', compact('pasien', 'asuransis'));
     }
 
     public function update(Request $request, $id)
-{
+    {
+        $id = Crypt::decrypt($id);
 
-    $id = Crypt::decrypt($id);
-    
-    // Validate the incoming data
-    $request->validate([
-        'nik' => 'nullable|string|max:50',
-        'nama' => 'required|string|max:255',
-        'jenis_kelamin' => 'required|in:L,P',
-        'tanggal_lahir' => 'nullable|date',
-        'alamat' => 'nullable|string',
-        'no_hp' => 'nullable|string|max:20',
-        'penanggung' => 'nullable|string|max:100',
-        'asuransi_id' => 'nullable|integer',
-        'no_asuransi' => 'nullable|string|max:100',
-    ]);
+          if (!empty($request->nik)) {
+        $cekNik = Pasien::whereNull('deleted_at')
+            ->where('nik', $request->nik)
+            ->exists();
 
-    // Find the existing Pasien record
-    $pasien = Pasien::findOrFail($id);
+        if ($cekNik) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'NIK sudah digunakan.');
+        }
+    }
+        
+        $request->validate([
+            'nik' => 'nullable|string|max:50',
+            'nama' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tanggal_lahir' => 'nullable|date',
+            'tempat_lahir' => 'nullable|string|max:100',
+            'agama' => 'nullable|string|max:50',
+            'pendidikan' => 'nullable|string|max:100',
+            'pekerjaan' => 'nullable|string|max:100',
+            'status_pernikahan' => 'nullable|string|max:50',
+            'golongan_darah' => 'nullable|string|max:5',
+            'kewarganegaraan' => 'nullable|string|max:100',
+            'suku' => 'nullable|string|max:100',
+            'bahasa' => 'nullable|string|max:100',
+            'nama_ayah' => 'nullable|string|max:255',
+            'nama_ibu' => 'nullable|string|max:255',
+            'nama_pasangan' => 'nullable|string|max:255',
+            'kontak_darurat_nama' => 'nullable|string|max:255',
+            'kontak_darurat_hubungan' => 'nullable|string|max:100',
+            'kontak_darurat_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string',
+            'rt' => 'nullable|string|max:10',
+            'rw' => 'nullable|string|max:10',
+            'kelurahan' => 'nullable|string|max:100',
+            'kecamatan' => 'nullable|string|max:100',
+            'kota' => 'nullable|string|max:100',
+            'provinsi' => 'nullable|string|max:100',
+            'no_hp' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:100',
+            'penanggung' => 'nullable|string|max:100',
+            'asuransi_id' => 'nullable|integer',
+            'no_asuransi' => 'nullable|string|max:100',
+        ]);
 
-    // Update the Pasien record with the validated data
-    $pasien->update([
-        'nik' => $request->nik,
-        'nama' => $request->nama,
-        'jenis_kelamin' => $request->jenis_kelamin,
-        'tanggal_lahir' => $request->tanggal_lahir,
-        'alamat' => $request->alamat,
-        'no_hp' => $request->no_hp,
-        'penanggung' => $request->penanggung,
-        'asuransi_id' => $request->asuransi_id,
-        'no_asuransi' => $request->no_asuransi,
-        'updated_user' => auth()->id(), // Update the user who updated the record
-    ]);
+        $pasien = Pasien::findOrFail($id);
+        $pasien->update(array_merge($request->all(), [
+            'updated_user' => auth()->id(),
+        ]));
 
-    // Redirect back to the pasien index page with a success message
-    return redirect()->route('admin.pasien.index')->with('success', 'Pasien berhasil diperbarui.');
-}
+        return redirect()->route('admin.pasien.index')->with('success', 'Pasien berhasil diperbarui.');
+    }
 
     public function destroy($id)
     {

@@ -22,37 +22,43 @@
                     <input type="text" name="search" id="search_input" class="form-control" placeholder="Masukkan kata kunci" value="{{ request('search') }}">
                 </div>
                 <button type="submit" class="btn btn-secondary mb-3">Cari</button>
+                <a href="{{ route('admin.pasien.create') }}" class="btn btn-secondary mb-3">Buat Rekam Medis</a>
             </form>
 
             <!-- Hasil Pencarian Pasien hanya muncul jika ada input pencarian -->
             @if(request()->has('search') && $pasiens->isNotEmpty())
                 <h5>Hasil Pencarian:</h5>
-                <ul class="list-group mb-3">
-                    @foreach($pasiens as $pasien)
-                        <li class="list-group-item">
-                            <div class="form-group">
-                                <label for="nama_pasien">Nama Pasien:</label>
-                                <input type="text" name="nama_pasien" class="form-control" value="{{ $pasien->nama }}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="id">No Rekam Medis:</label>
-                                <input type="text" name="id" class="form-control" value="{{ $pasien->no_rekam_medis }}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="nik">NIK:</label>
-                                <input type="text" name="nik" class="form-control" value="{{ $pasien->nik }}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="tanggal_lahir">Tanggal Lahir:</label>
-                                <input type="text" name="tanggal_lahir" class="form-control" value="{{ $pasien->tanggal_lahir }}" readonly>
-                            </div>
-                            <form action="{{ route('admin.pendaftaran.create') }}" method="GET">
-                                <input type="hidden" name="pasien_id" value="{{ $pasien->id }}">
-                                <button type="submit" class="btn btn-success btn-sm">Pilih Pasien</button>
-                            </form>
-                        </li>
-                    @endforeach
-                </ul>
+                <div class="table-responsive mb-3">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Pasien</th>
+                                <th>No Rekam Medis</th>
+                                <th>NIK</th>
+                                <th>Tanggal Lahir</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pasiens as $index => $pasien)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $pasien->nama }}</td>
+                                    <td>{{ $pasien->no_rekam_medis }}</td>
+                                    <td>{{ $pasien->nik }}</td>
+                                    <td>{{ $pasien->tanggal_lahir }}</td>
+                                    <td>
+                                        <form action="{{ route('admin.pendaftaran.create') }}" method="GET" style="display:inline;">
+                                            <input type="hidden" name="pasien_id" value="{{ $pasien->id }}">
+                                            <button type="submit" class="btn btn-success btn-sm">Pilih Pasien</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @elseif(request()->has('search'))
                 <p>Tidak ada pasien yang ditemukan.</p>
             @endif

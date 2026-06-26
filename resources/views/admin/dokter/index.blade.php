@@ -14,6 +14,8 @@
                         <th>Nama Dokter</th>
                         <th>No HP</th>
                         <th>Spesialis</th>
+                        <th>STR</th>
+                        <th>Jenis Kelamin</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -23,6 +25,8 @@
                         <td>{{ $dokter->nama }}</td>
                         <td>{{ $dokter->no_hp }}</td>
                         <td>{{ $dokter->nama_spesialis }}</td>
+                        <td>{{ $dokter->str }}</td>
+                        <td>{{ $dokter->jenis_kelamin }}</td>
                         <td>
                             <a href="{{ route('admin.dokter.edit', encrypt($dokter->id)) }}" class="btn btn-sm btn-primary">Edit</a>
                             <form action="{{ route('admin.dokter.destroy', encrypt($dokter->id)) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?')">

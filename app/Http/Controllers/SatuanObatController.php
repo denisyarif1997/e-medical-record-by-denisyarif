@@ -15,6 +15,7 @@ class SatuanObatController extends Controller
         // Mengambil semua data satuan obat yang belum dihapus
         $satuans = Obat::getSatuanObat();
         return view('admin.satuan_obat.index', compact('satuans'));
+        // dd($satuans);
     }
 
     public function create()

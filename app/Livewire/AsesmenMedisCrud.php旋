@@ -19,6 +19,7 @@ class AsesmenMedisCrud extends Component
     public $resep_jadi = [];
     public $resep_racik = [];
     
+    public $obat = []; // Legacy for backward compatibility in JSON if needed
     public $procedure = [];
     public $diagnosa = [];
     public $diagnosaResults = [];

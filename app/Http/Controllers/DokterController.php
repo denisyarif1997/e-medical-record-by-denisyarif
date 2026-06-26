@@ -36,12 +36,16 @@ class DokterController extends Controller
             'nama' => 'required|string|max:255',
             'spec_code' => 'required|string|max:50',
             'no_hp' => 'nullable|string|max:20',
+            'str' => 'nullable|string|max:50',
+            'jenis_kelamin' => 'nullable|string|max:10',
         ]);
 
         DB::table('dokters')->insert([
             'nama' => $request->nama,
             'spec_code' => $request->spec_code,
             'no_hp' => $request->no_hp,
+            'str' => $request->str,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'inserted_user' => auth()->id(),
             'updated_user' => auth()->id(),
             'created_at' => now(),
@@ -68,12 +72,16 @@ class DokterController extends Controller
             'nama' => 'required|string|max:255',
             'spec_code' => 'required|string|max:50',
             'no_hp' => 'nullable|string|max:20',
+            'str' => 'nullable|string|max:50',
+            'jenis_kelamin' => 'nullable|string|max:10',
         ]);
 
         DB::table('dokters')->where('id', $id)->update([
             'nama' => $request->nama,
             'spec_code' => $request->spec_code,
             'no_hp' => $request->no_hp,
+            'str' => $request->str,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'updated_user' => auth()->id(),
             'updated_at' => now(),
         ]);

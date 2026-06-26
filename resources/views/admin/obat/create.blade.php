@@ -23,9 +23,16 @@
                     <input type="text" name="bentuk_sediaan" class="form-control" value="{{ old('bentuk_sediaan') }}">
                 </div>
 
-                <div class="form-group">
+               <div class="form-group">
                     <label for="golongan">Golongan</label>
-                    <input type="text" name="golongan" class="form-control" value="{{ old('golongan') }}">
+                    <select name="golongan" class="form-control" required>
+                        <option value="">Pilih Golongan</option>
+                        @foreach($golongans as $golongan)
+                            <option value="{{ $golongan->id }}" {{ old('golongan') == $golongan->id ? 'selected' : '' }}>
+                                {{ $golongan->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -67,8 +74,8 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-success">Simpan</button>
-                <a href="{{ route('admin.obat.index') }}" class="btn btn-secondary">Kembali</a>
+                <button type="submit" class="btn btn-success rounded-pill">Simpan</button>
+                <a href="{{ route('admin.obat.index') }}" class="btn btn-secondary rounded-pill ">Kembali</a>
             </form>
         </div>
     </div>

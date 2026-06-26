@@ -27,9 +27,8 @@ class AsesmenMedisController extends Controller
         }
 
         $createAsesmen = AsesmenMedis::findById($id);
-        $diagnosas = DB::table('diagnosa')->orderBy('name')->limit(10)->get();
+        $diagnosas = DB::table('diagnosa')->orderBy('name')->limit(1)->get();
 
-        // dd($diagnosas);
         return view('admin.asesmen_medis.create', compact('createAsesmen', 'diagnosas'));
     }
 
@@ -37,23 +36,19 @@ class AsesmenMedisController extends Controller
     {
         $request->validate([
             'id_regis' => 'required|exists:pendaftaran,id',
-            'tujuan_kunjungan' => 'required|string',
             'keluhan_utama' => 'required|string',
-            'keadaan_umum' => 'required|string',
-            'sistolik' => 'required|string',
-            'diastolik' => 'required|string',
-            'nadi' => 'required|string',
-            'pernapasan' => 'required|string',
-            'suhu' => 'required|string',
-            'tinggi_badan' => 'required|string',
-            'berat_badan' => 'required|string',
-            'imt' => 'required|string',
-            'pemeriksaan_fisik' => 'nullable|string',
-            'ttv' => 'nullable|array',
-
+            'rps' => 'nullable|string',
+            'rpd' => 'nullable|string',
+            'rpk' => 'nullable|string',
+            'riwayat_alergi' => 'nullable|string',
+            'keadaan_umum' => 'nullable|string',
+            'status_lokalis' => 'nullable|string',
             'jenis_diagnosa' => 'required|in:icd,non_icd',
             'diagnosa_icd_id' => 'required_if:jenis_diagnosa,icd|nullable|exists:diagnosa,id',
             'diagnosa_non_icd' => 'required_if:jenis_diagnosa,non_icd|nullable|string',
+            'diagnosa_sekunder' => 'nullable|string',
+            'terapi' => 'nullable|string',
+            'rencana_lanjutan' => 'nullable|string',
         ]);
 
         $diagnosa = null;
@@ -72,37 +67,40 @@ class AsesmenMedisController extends Controller
             ];
         }
 
-
         AsesmenMedis::create([
             'id_regis' => $request->id_regis,
-            'asesmen' => json_encode([
-                'tujuan_kunjungan' => $request->tujuan_kunjungan,
-                'keluhan_utama' => $request->keluhan_utama,
-                'keadaan_umum' => $request->keadaan_umum,
-                'sistolik' => $request->sistolik,
-                'diastolik' => $request->diastolik,
-                'nadi' => $request->nadi,
-                'pernapasan' => $request->pernapasan,
-                'suhu' => $request->suhu,
-                'tinggi_badan' => $request->tinggi_badan,
-                'berat_badan' => $request->berat_badan,
-                'imt' => $request->imt,
-                'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
-                'ttv' => $request->ttv,
-                'diagnosa' => $diagnosa,
-            ]),
+            'asesmen' => [
+                'subjective' => [
+                    'keluhan_utama' => $request->keluhan_utama,
+                    'rps' => $request->rps,
+                    'rpd' => $request->rpd,
+                    'rpk' => $request->rpk,
+                    'riwayat_alergi' => $request->riwayat_alergi,
+                ],
+                'objective' => [
+                    'keadaan_umum' => $request->keadaan_umum,
+                    'status_lokalis' => $request->status_lokalis,
+                ],
+                'assessment' => [
+                    'diagnosa' => $diagnosa,
+                    'is_icd' => $request->jenis_diagnosa == 'icd',
+                    'diagnosa_sekunder' => $request->diagnosa_sekunder,
+                ],
+                'plan' => [
+                    'terapi' => $request->terapi,
+                    'rencana_lanjutan' => $request->rencana_lanjutan,
+                ],
+            ],
             'inserted_user' => Auth::id(),
         ]);
 
-        // dd($request->all());
-        return redirect()->route('admin.asesmen_medis.index')->with('success', 'Data berhasil disimpan');
+        return redirect()->route('admin.asesmen_medis.index')->with('success', 'Asesmen Medis berhasil disimpan');
     }
 
     public function edit($id)
     {
-        $asesmen = DB::table('asesmen_medis')->where('id', $id)->first();
-        $asesmen->asesmen = json_decode($asesmen->asesmen, true);
-
+        $asesmen = AsesmenMedis::findOrFail($id);
+        
         $regis = DB::table('pendaftaran as p')
             ->leftJoin('pasiens as pas', 'p.pasien_id', '=', 'pas.id')
             ->leftJoin('dokters as d', 'p.dokter_id', '=', 'd.id')
@@ -119,32 +117,31 @@ class AsesmenMedisController extends Controller
             ->where('p.id', $asesmen->id_regis)
             ->first();
 
-        $diagnosas = DB::table('diagnosa')->orderBy('name')->get();
+        $nurse = DB::table('asesmen_perawat')->where('id_regis', $asesmen->id_regis)->first();
+        if ($nurse) {
+            $nurse->asesmen = json_decode($nurse->asesmen, true);
+        }
 
-        return view('admin.asesmen_medis.create', compact('asesmen', 'regis', 'diagnosas'));
+        return view('admin.asesmen_medis.edit', compact('asesmen', 'regis', 'nurse'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'id_regis' => 'required|exists:pendaftaran,id',
-            'tujuan_kunjungan' => 'required|string',
             'keluhan_utama' => 'required|string',
-            'keadaan_umum' => 'required|string',
-            'sistolik' => 'required|string',
-            'diastolik' => 'required|string',
-            'nadi' => 'required|string',
-            'pernapasan' => 'required|string',
-            'suhu' => 'required|string',
-            'tinggi_badan' => 'required|string',
-            'berat_badan' => 'required|string',
-            'imt' => 'required|string',
-            'pemeriksaan_fisik' => 'required|string',
-            'ttv' => 'nullable|array',
-
+            'rps' => 'nullable|string',
+            'rpd' => 'nullable|string',
+            'rpk' => 'nullable|string',
+            'riwayat_alergi' => 'nullable|string',
+            'keadaan_umum' => 'nullable|string',
+            'status_lokalis' => 'nullable|string',
             'jenis_diagnosa' => 'required|in:icd,non_icd',
             'diagnosa_icd_id' => 'required_if:jenis_diagnosa,icd|nullable|exists:diagnosa,id',
             'diagnosa_non_icd' => 'required_if:jenis_diagnosa,non_icd|nullable|string',
+            'diagnosa_sekunder' => 'nullable|string',
+            'terapi' => 'nullable|string',
+            'rencana_lanjutan' => 'nullable|string',
         ]);
 
         $diagnosa = null;
@@ -166,39 +163,44 @@ class AsesmenMedisController extends Controller
         $asesmen = AsesmenMedis::findOrFail($id);
         $asesmen->update([
             'id_regis' => $request->id_regis,
-            'asesmen' => json_encode([
-                'tujuan_kunjungan' => $request->tujuan_kunjungan,
-                'keluhan_utama' => $request->keluhan_utama,
-                'keadaan_umum' => $request->keadaan_umum,
-                'sistolik' => $request->sistolik,
-                'diastolik' => $request->diastolik,
-                'nadi' => $request->nadi,
-                'pernapasan' => $request->pernapasan,
-                'suhu' => $request->suhu,
-                'tinggi_badan' => $request->tinggi_badan,
-                'berat_badan' => $request->berat_badan,
-                'imt' => $request->imt,
-                'pemeriksaan_fisik' => $request->pemeriksaan_fisik,
-                'ttv' => $request->ttv,
-                'diagnosa' => $diagnosa,
-            ]),
+            'asesmen' => [
+                'subjective' => [
+                    'keluhan_utama' => $request->keluhan_utama,
+                    'rps' => $request->rps,
+                    'rpd' => $request->rpd,
+                    'rpk' => $request->rpk,
+                    'riwayat_alergi' => $request->riwayat_alergi,
+                ],
+                'objective' => [
+                    'keadaan_umum' => $request->keadaan_umum,
+                    'status_lokalis' => $request->status_lokalis,
+                ],
+                'assessment' => [
+                    'diagnosa' => $diagnosa,
+                    'is_icd' => $request->jenis_diagnosa == 'icd',
+                    'diagnosa_sekunder' => $request->diagnosa_sekunder,
+                ],
+                'plan' => [
+                    'terapi' => $request->terapi,
+                    'rencana_lanjutan' => $request->rencana_lanjutan,
+                ],
+            ],
             'updated_user' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.asesmen_medis.index')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('admin.asesmen_medis.index')->with('success', 'Asesmen Medis berhasil diperbarui');
     }
 
     public function search(Request $request)
-{
-    $term = $request->get('q');
-    $results = DB::table('diagnosas')
-        ->select('id', 'code', 'name')
-        ->where('code', 'ILIKE', "%$term%")
-        ->orWhere('name', 'ILIKE', "%$term%")
-        ->limit(20)
-        ->get();
+    {
+        $term = $request->get('q');
+        $results = DB::table('diagnosa')
+            ->select('id', 'code', 'name')
+            ->where('code', 'LIKE', "%$term%")
+            ->orWhere('name', 'LIKE', "%$term%")
+            ->limit(20)
+            ->get();
 
-    return response()->json($results);
-}
-
+        return response()->json($results);
+    }
 }

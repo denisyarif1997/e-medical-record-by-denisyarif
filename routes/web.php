@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\AsesmenPerawatController;
 use App\Livewire\AsesmenMedisCrud;
+use App\Livewire\TelaahFarmasi;
 use App\Livewire\JenisHargaCrud;
 use App\Livewire\PostComponent;
 use App\Livewire\Diagnosa;
+use App\Livewire\GolonganObatCrud;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,18 +40,16 @@ Route::prefix('/otp')->middleware('guest')->name('otp.')->controller(LoginWithOT
 // route pendaftaran
 Route::get('pendaftaran/cari_pasien', [PendaftaranController::class, 'cariPasien'])->name('admin.pendaftaran.cari_pasien');
 Route::post('pendaftaran/{id}/cancel', [PendaftaranController::class, 'cancelRegis'])->name('admin.pendaftaran.cancelVisit');
-// route asesmen
-Route::get('/asesmen_perawat/create/{id}', [AsesmenPerawatController::class, 'createWithId'])->name('admin.asesmen_perawat.createWithId');
-Route::get('/asesmen_medis/create/{id}', [AsesmenMedisController::class, 'createWithId'])->name('admin.asesmen_medis.createWithId');
-// get diagnosa
-
 // livewire routes
-Route::get('/asesmen-medis', AsesmenMedisCrud::class)->name('forms.asesmen_medis');
-Route::get('/diagnosa', Diagnosa::class)->name('forms.diagnosa');
-
-
-Route::get('/jenis-harga', JenisHargaCrud::class)->name('forms.jenis_harga');
-Route::get('/post', PostComponent::class)->name('');
+// Protected Livewire routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/asesmen-medis', AsesmenMedisCrud::class)->name('forms.asesmen_medis');
+    Route::get('/telaah-farmasi', TelaahFarmasi::class)->name('forms.telaah_farmasi');
+    Route::get('/diagnosa', Diagnosa::class)->name('forms.diagnosa');
+    Route::get('/golongan-obat', GolonganObatCrud::class)->name('forms.golongan_obat');
+    Route::get('/jenis-harga', JenisHargaCrud::class)->name('forms.jenis_harga');
+    Route::get('/post', PostComponent::class)->name('post.index');
+});
 
 
 

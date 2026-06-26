@@ -52,13 +52,15 @@ class Obat extends Model
                 m.*, 
                 f.nama AS nama_formula,
                 s.nama AS satuan_obat,
+                go2.nama as golongan_obat,
                 f.faktor,
                 (m.harga_beli * f.faktor) AS harga_jual
             FROM master_obat m
             LEFT JOIN formula f ON m.formula_id = f.id
             left join satuan_obat s ON m.satuan = s.id
+            left join golongan_obat go2 on go2.id = m.golongan 
             WHERE m.deleted_at IS NULL
-            ORDER BY m.id DESC
+            ORDER BY m.id desc
         ");
     }
 
@@ -152,6 +154,15 @@ class Obat extends Model
         SELECT * FROM satuan_obat where deleted_at is null
     ");
 
+    }
+
+    public static function getGolonganObat()
+    {
+        return DB::select(
+            "select * from 
+            golongan_obat 
+            where 
+            deleted_at is null");
     }
 
     public static function insertSatuan($dataSatuan)

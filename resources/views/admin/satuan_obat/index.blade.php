@@ -12,6 +12,8 @@
                 <thead>
                     <tr>
                         <th>Nama</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -19,13 +21,17 @@
                     @foreach ($satuans as $data)
                         <tr>
                             <td>{{ $data->nama }}</td>
+                            {{-- <td>{{ $data->created_at }}</td> --}}
+                            <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($data->updated_at)->format('d-m-Y H:i') }}</td>
+
                             {{-- <td>{{ $s->code }}</td> --}}
                             <td>
-                                <a href="{{ route('admin.satuan_obat.edit', ($data->id)) }}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{{ route('admin.satuan_obat.edit', ($data->id)) }}" class="btn btn-sm btn-primary rounded-pill">Edit</a>
                                 <form action="{{ route('admin.satuan_obat.destroy', ($data->id)) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                    <button class="btn btn-sm btn-danger rounded-pill">Delete</button>
                                 </form>
                             </td>
                         </tr>

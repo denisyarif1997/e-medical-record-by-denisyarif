@@ -23,7 +23,8 @@ class ObatController extends Controller
     {   
         $formulas = Obat::getWithFormula(); // Adjusted to not require an $id
         $satuans = Obat::getSatuanObat();
-        return view('admin.obat.create', compact('formulas','satuans'));
+        $golongans = Obat::getGolonganObat();
+        return view('admin.obat.create', compact('formulas','satuans','golongans'));
     }
 
     // Menyimpan data obat baru
@@ -70,8 +71,9 @@ class ObatController extends Controller
     // Ambil semua data formula untuk dropdown
     $formulas = DB::table('formula')->whereNull('deleted_at')->get();
     $satuan = Obat::getSatuanObat();
+    $golongans = Obat::getGolonganObat();
 
-    return view('admin.obat.edit', compact('obat', 'formulas', 'formula','satuan'));
+    return view('admin.obat.edit', compact('obat', 'formulas', 'formula','satuan','golongans'));
 }
 
 

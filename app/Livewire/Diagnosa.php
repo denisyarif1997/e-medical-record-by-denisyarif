@@ -26,9 +26,9 @@ class Diagnosa extends Component
             ->whereNull('deleted_at')
             ->when($this->searchKeyword, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('code', 'like', '%' . $this->searchKeyword . '%')
-                        ->orWhere('name', 'like', '%' . $this->searchKeyword . '%')
-                        ->orWhere('description', 'like', '%' . $this->searchKeyword . '%');
+                    $q->where('code', 'ilike', '%' . $this->searchKeyword . '%')
+                        ->orWhere('name', 'ilike', '%' . $this->searchKeyword . '%');
+                        // ->orWhere('description', 'ilike', '%' . $this->searchKeyword . '%');
                 });
             })
             ->orderByDesc('id')
@@ -65,7 +65,7 @@ class Diagnosa extends Component
         ]);
 
         $this->resetFields();
-        return redirect()->route('livewire.diagnosa')->with('message', 'Diagnosa berhasil disimpan!');
+        return redirect()->route('forms.diagnosa')->with('message', 'Diagnosa berhasil disimpan!');
     }
 
     public function edit($id)
@@ -94,7 +94,7 @@ class Diagnosa extends Component
         ]);
 
         $this->resetFields();
-        return redirect()->route('livewire.diagnosa')->with('message', 'Diagnosa berhasil diupdate!');
+        return redirect()->route('forms.diagnosa')->with('message', 'Diagnosa berhasil diupdate!');
     }
      public function delete($id)
     {
@@ -104,7 +104,7 @@ class Diagnosa extends Component
         ]);
         $diagnosas->delete();
 
-        return redirect()->route('livewire.diagnosa')->with('message', 'Diagnosa berhasil Dihapus!');
+        return redirect()->route('forms.diagnosa')->with('message', 'Diagnosa berhasil Dihapus!');
     }
     private function resetFields()
     {

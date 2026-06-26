@@ -24,6 +24,18 @@
                         @endforeach
                     </select>
                 </div>
+                 <div class="form-group">
+                    <label>Str</label>
+                    <input type="text" name="str" class="form-control">
+                </div>
+                 <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <select name="jenis_kelamin" class="form-control">
+                        <option value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
             </div>
             <div class="card-footer">
                 <button class="btn btn-primary">Simpan</button>

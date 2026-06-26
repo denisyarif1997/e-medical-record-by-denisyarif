@@ -33,7 +33,7 @@ class FormulaController extends Controller
     public function edit($id)
     {
         // Ambil data formula berdasarkan ID
-        $formula = Formula::getById($id);
+        $formula = Formula::findOrFail($id);
 
         return view('admin.formula.edit', compact('formula'));
     }

@@ -27,6 +27,18 @@
                         @endforeach
                     </select>
                 </div>
+                 <div class="form-group">
+                    <label>STR</label>
+                    <input type="text" name="str" class="form-control" value="{{ $dokter->str }}">
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <select name="jenis_kelamin" class="form-control">
+                        <option value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="Laki-laki" {{ $dokter->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ $dokter->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                </div>
             </div>
             <div class="card-footer">
                 <button class="btn btn-primary">Update</button>
