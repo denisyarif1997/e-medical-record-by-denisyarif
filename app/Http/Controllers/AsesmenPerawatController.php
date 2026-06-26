@@ -90,7 +90,7 @@ class AsesmenPerawatController extends Controller
 
         $regis = DB::table('pendaftaran as p')
             ->leftJoin('pasiens as pas', 'p.pasien_id', '=', 'pas.id')
-            ->leftJoin('dokters as d', 'p.dokter_id', '=', 'd.id')
+            ->leftJoin('tenaga_medis as d', 'p.dokter_id', '=', 'd.id')
             ->leftJoin('poliklinik as pol', 'p.poli_id', '=', 'pol.id')
             ->leftJoin('asuransi as a', 'p.id_asuransi', '=', 'a.id')
             ->select(

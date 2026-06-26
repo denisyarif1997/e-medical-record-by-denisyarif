@@ -24,7 +24,7 @@ class Poliklinik extends Model
 
     public function dokter()
     {
-        return $this->belongsTo(Dokter::class, 'dokter_id');
+        return $this->belongsTo(TenagaMedis::class, 'dokter_id');
     }
 
     public function createdBy()

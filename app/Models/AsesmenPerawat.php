@@ -60,7 +60,7 @@ class AsesmenPerawat extends Model
                 pendaftaran p
             LEFT JOIN pasiens pas ON p.pasien_id = pas.id
             LEFT JOIN poliklinik pol ON p.poli_id = pol.id
-            LEFT JOIN dokters d ON p.dokter_id = d.id
+            LEFT JOIN tenaga_medis d ON p.dokter_id = d.id
             LEFT JOIN asuransi a ON p.id_asuransi = a.id
             LEFT JOIN asesmen_perawat ap ON p.id = ap.id_regis
             left join asesmen_medis am on p.id = am.id_regis AND am.deleted_at IS NULL
@@ -94,7 +94,7 @@ class AsesmenPerawat extends Model
              p.pasien_id = pas.id
         left join poliklinik pol on
              p.poli_id = pol.id
-        left join dokters d on
+        left join tenaga_medis d on
              p.dokter_id = d.id
         left join asuransi a on
              p.id_asuransi = a.id
@@ -120,7 +120,7 @@ class AsesmenPerawat extends Model
 //                 p.pasien_id = pas.id
 //             left join poliklinik pol on
 //                 p.poli_id = pol.id
-//             left join dokters d on
+//             left join tenaga_medis d on
 //                 p.dokter_id = d.id
 //             left join asuransi a on
 //                 p.id_asuransi = a.id

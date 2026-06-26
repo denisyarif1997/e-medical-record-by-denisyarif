@@ -3,7 +3,7 @@
 use App\Http\Controllers\AsesmenMedisController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\DokterController;
+use App\Http\Controllers\TenagaMedisController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PasienController;
@@ -39,7 +39,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::resource('asuransi',AsuransiController::class);
         Route::resource('pasien',PasienController::class);
         Route::resource('spesialis',SpesialisController::class);
-        Route::resource('dokter',DokterController::class);
+        Route::resource('tenaga_medis',TenagaMedisController::class);
         Route::resource('poliklinik',PoliklinikController::class);
         Route::resource('pendaftaran', PendaftaranController::class)->except(['show']);
         Route::resource('obat', ObatController::class);

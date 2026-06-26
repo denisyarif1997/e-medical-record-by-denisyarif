@@ -9,7 +9,7 @@ use App\Models\SubCategory;
 use App\Models\User;
 use App\Models\Asuransi;
 use App\Models\Pasien;
-use App\Models\Dokter;
+use App\Models\TenagaMedis;
 use App\Models\Poliklinik;
 use App\Models\Spesialis;
 use App\Models\Obat;
@@ -57,13 +57,14 @@ class Sidebar extends Component
         $SpesialisCount = Spesialis::count();
         view()->share('SpesialisCount',$SpesialisCount);
 
-        $DokterCount = Dokter::count();
-        view()->share('DokterCount',$DokterCount);
+        $TenagaMedisCount = TenagaMedis::count();
+        view()->share('TenagaMedisCount',$TenagaMedisCount);
+        view()->share('DokterCount',$TenagaMedisCount); // keep for backward compat
 
         $PoliCount = Poliklinik::count();
         view()->share('PoliCount',$PoliCount);
 
-        $PendaftaaranCount = Dokter::count();
+        $PendaftaaranCount = TenagaMedis::count();
         view()->share('PendaftaaranCount',$PendaftaaranCount);
 
         $DataObatCount = Obat::count();

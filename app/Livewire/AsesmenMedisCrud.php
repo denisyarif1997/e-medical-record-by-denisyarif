@@ -52,45 +52,63 @@ class AsesmenMedisCrud extends Component
         return view('livewire.asesmen-medis-crud');
     }
 
-    public function loadPasiens()
-    {
-        $startDate = $this->startDate;
-        $endDate = $this->endDate;
+public function loadPasiens()
+{
+    $this->pasiens = [];
+    $startDate = $this->startDate;
+    $endDate = $this->endDate;
 
-        $sql = "
-           SELECT
-                p.id AS id_regis,
-                pas.no_rekam_medis,
-                pas.nama AS nama_pasien,
-                ap.asesmen AS asesmen_perawat,
-                pol.nama AS nama_poli,
-                d.nama AS nama_dokter,
-                a.nama AS nama_asuransi,
-                p.created_at AS tanggal_regis,
-                CASE
-                    WHEN am.id IS NOT NULL THEN 'Sudah Asesmen Medis'
-                    WHEN ap.id IS NOT NULL THEN 'Sudah Asesmen Perawat - Belum Asesmen Medis'
-                    ELSE 'Belum Asesmen Perawat'
-                END AS status
-            FROM
-                pendaftaran p
-            JOIN pasiens pas ON p.pasien_id = pas.id
-            JOIN poliklinik pol ON p.poli_id = pol.id
-            JOIN dokters d ON p.dokter_id = d.id
-            LEFT JOIN asuransi a ON p.id_asuransi = a.id
-            LEFT JOIN asesmen_perawat ap ON p.id = ap.id_regis AND ap.deleted_at IS NULL
-            LEFT JOIN asesmen_medis am ON p.id = am.id_regis AND am.deleted_at IS NULL
-            WHERE
-                p.deleted_at IS NULL
-                AND p.status = '1'
-                " . ($startDate && $endDate ? "AND DATE(p.created_at) BETWEEN ? AND ?" : "") . "
-            ORDER BY p.created_at DESC
-        ";
-
-        $bindings = $startDate && $endDate ? [$startDate, $endDate] : [];
-        $this->pasiens = DB::select($sql, $bindings);
+    if ($startDate && $endDate && $endDate < $startDate) {
+        $endDate = $startDate;
+        $this->endDate = $startDate;
     }
 
+    $whereDate = '';
+    $bindings = [];
+
+    if ($startDate && $endDate) {
+        $whereDate = "AND p.created_at::date BETWEEN ? AND ?";
+        $bindings = [$startDate, $endDate];
+    } elseif ($startDate) {
+        $whereDate = "AND p.created_at::date >= ?";
+        $bindings = [$startDate];
+    } elseif ($endDate) {
+        $whereDate = "AND p.created_at::date <= ?";
+        $bindings = [$endDate];
+    }
+
+    $sql = "
+       SELECT
+            p.id AS id_regis,
+            pas.no_rekam_medis,
+            pas.nama AS nama_pasien,
+            ap.asesmen AS asesmen_perawat,
+            pol.nama AS nama_poli,
+            d.nama AS nama_dokter,
+            a.nama AS nama_asuransi,
+            p.created_at AS tanggal_regis,
+            CASE
+                WHEN am.id IS NOT NULL THEN 'Sudah Asesmen Medis'
+                WHEN ap.id IS NOT NULL THEN 'Sudah Asesmen Perawat - Belum Asesmen Medis'
+                ELSE 'Belum Asesmen Perawat'
+            END AS status
+        FROM
+            pendaftaran p
+        JOIN pasiens pas ON p.pasien_id = pas.id
+        JOIN poliklinik pol ON p.poli_id = pol.id
+        JOIN tenaga_medis d ON p.dokter_id = d.id
+        LEFT JOIN asuransi a ON p.id_asuransi = a.id
+        LEFT JOIN asesmen_perawat ap ON p.id = ap.id_regis AND ap.deleted_at IS NULL
+        LEFT JOIN asesmen_medis am ON p.id = am.id_regis AND am.deleted_at IS NULL
+        WHERE
+            p.deleted_at IS NULL
+            AND p.status = '1'
+            {$whereDate}
+        ORDER BY p.created_at DESC
+    ";
+
+    $this->pasiens = DB::select($sql, $bindings);
+}
     public function selectPasien($id)
     {
         $this->resetFields();
@@ -102,7 +120,7 @@ class AsesmenMedisCrud extends Component
             FROM pendaftaran p
             JOIN pasiens pas ON p.pasien_id = pas.id
             JOIN poliklinik pol ON p.poli_id = pol.id
-            JOIN dokters d ON p.dokter_id = d.id
+            JOIN tenaga_medis d ON p.dokter_id = d.id
             LEFT JOIN asuransi a ON p.id_asuransi = a.id
             WHERE p.id = ? AND p.deleted_at IS NULL", [$id]);
 

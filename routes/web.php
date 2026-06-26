@@ -12,6 +12,7 @@ use App\Livewire\JenisHargaCrud;
 use App\Livewire\PostComponent;
 use App\Livewire\Diagnosa;
 use App\Livewire\GolonganObatCrud;
+use App\Livewire\MasterBridging;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/golongan-obat', GolonganObatCrud::class)->name('forms.golongan_obat');
     Route::get('/jenis-harga', JenisHargaCrud::class)->name('forms.jenis_harga');
     Route::get('/post', PostComponent::class)->name('post.index');
+    Route::get('/master-bridging', MasterBridging::class)->name('forms.master_bridging');
 });
 
 

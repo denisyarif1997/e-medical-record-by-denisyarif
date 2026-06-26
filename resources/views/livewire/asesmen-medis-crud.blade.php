@@ -401,10 +401,9 @@
                     <div class="col-md-6 text-right">
                         <div class="d-inline-flex align-items-center">
                             <span class="text-xs mr-2 font-weight-bold text-light"><i class="fas fa-calendar-alt mr-1"></i> Periode:</span>
-                            <input type="date" wire:model="startDate" class="form-control form-control-sm mr-2 shadow-xs border-0 text-xs font-weight-bold text-dark px-2 py-1" style="width: auto; border-radius: 4px;">
-                            <span class="text-xs mr-2 font-weight-bold text-light">s/d</span>
-                            <input type="date" wire:model="endDate" class="form-control form-control-sm shadow-xs border-0 text-xs font-weight-bold text-dark px-2 py-1" style="width: auto; border-radius: 4px;">
-                        </div>
+                            <input type="date" wire:model.live="startDate" class="form-control form-control-sm mr-2 shadow-xs border-0 text-xs font-weight-bold text-dark px-2 py-1" style="width: auto; border-radius: 4px;">
+<span class="text-xs mr-2 font-weight-bold text-light">s/d</span>
+<input type="date" wire:model.live="endDate" class="form-control form-control-sm shadow-xs border-0 text-xs font-weight-bold text-dark px-2 py-1" style="width: auto; border-radius: 4px;">   </div>
                     </div>
                 </div>
             </div>
@@ -436,12 +435,12 @@
                                     <td class="align-middle"><span class="badge badge-light border text-xs">{{ $pasien->nama_poli }}</span></td>
                                     <td class="align-middle"><small class="text-muted font-weight-bold">{{ $pasien->nama_dokter }}</small></td>
                                     <td class="align-middle text-center">
-                                        @if(str_contains($pasien->status, 'Medis'))
+                                        @if(str_contains($pasien->status, '0'))
                                             <span class="badge badge-success px-2 py-1 shadow-xs"><i class="fas fa-check-double mr-1"></i> Selesai Asesmen</span>
                                         @elseif(str_contains($pasien->status, 'Perawat'))
                                             <span class="badge badge-warning px-2 py-1 shadow-xs text-dark"><i class="fas fa-user-clock mr-1"></i> Menunggu Dokter</span>
                                         @else
-                                            <span class="badge badge-danger px-2 py-1 shadow-xs"><i class="fas fa-exclamation-triangle mr-1"></i> Belum Asesmen Perawat</span>
+                                            <span class="badge badge-success px-2 py-1 shadow-xs"><i class="fas fa-check-double mr-1"></i> Sudah Input Dokter</span>
                                         @endif
                                     </td>
                                     <td class="align-middle text-xs">
@@ -450,7 +449,7 @@
                                         <span class="text-muted text-xxs font-weight-bold">{{ \Carbon\Carbon::parse($pasien->tanggal_regis)->format('d-m-Y') }}</span>
                                     </td>
                                     <td class="align-middle text-center">
-                                        @if(str_contains($pasien->status, 'Medis'))
+                                        @if(str_contains($pasien->status, '1'))
                                             <button class="btn btn-xs btn-outline-warning px-3 shadow-xs rounded-pill font-weight-bold" wire:click="selectPasien({{ $pasien->id_regis }})">
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </button>

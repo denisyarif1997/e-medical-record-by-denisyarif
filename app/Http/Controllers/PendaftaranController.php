@@ -30,15 +30,14 @@ class PendaftaranController extends Controller
         if ($request->has('pasien_id')) {
             $pasien = DB::table('pasiens')
                 ->where('id', $request->input('pasien_id'))
-                ->whereNull('deleted_at')
                 ->first();
         }
 
         // Ambil data untuk dropdown
-        $dokters = DB::table('dokters')
-            ->join('poliklinik', 'poliklinik.dokter_id', '=', 'dokters.id')
-            ->select('dokters.*', 'dokters.nama as dokter_nama', 'poliklinik.nama as nama_poli', 'poliklinik.id as poli_id')
-            ->whereNull('dokters.deleted_at')
+        $dokters = DB::table('tenaga_medis')
+            ->join('poliklinik', 'poliklinik.dokter_id', '=', 'tenaga_medis.id')
+            ->select('tenaga_medis.*', 'tenaga_medis.nama as dokter_nama', 'poliklinik.nama as nama_poli', 'poliklinik.id as poli_id')
+            ->whereNull('tenaga_medis.deleted_at')
             ->whereNull('poliklinik.deleted_at')
             ->get();
 
@@ -102,10 +101,10 @@ class PendaftaranController extends Controller
     }
 
     // Ambil semua dokter + poliklinik terkait
-    $dokters = DB::table('dokters')
-        ->join('poliklinik', 'poliklinik.dokter_id', '=', 'dokters.id')
-        ->select('dokters.*', 'dokters.nama as dokter_nama', 'poliklinik.nama as nama_poli', 'poliklinik.id as poli_id')
-        ->whereNull('dokters.deleted_at')
+    $dokters = DB::table('tenaga_medis')
+        ->join('poliklinik', 'poliklinik.dokter_id', '=', 'tenaga_medis.id')
+        ->select('tenaga_medis.*', 'tenaga_medis.nama as dokter_nama', 'poliklinik.nama as nama_poli', 'poliklinik.id as poli_id')
+        ->whereNull('tenaga_medis.deleted_at')
         ->whereNull('poliklinik.deleted_at')
         ->get();
 
@@ -165,29 +164,35 @@ public function update(Request $request, $id)
     }
 
 
-    public function cariPasien(Request $request)
-    {
-        $search = $request->input('search');
-        $filterBy = $request->input('filter_by');
+   public function cariPasien(Request $request)
+{
+    $search = $request->input('search');
+    $filterBy = $request->input('filter_by');
 
-        $pasiens = collect(); // kosong, tapi tetap Collection
+    $query = DB::table('pasiens')
+        ->whereNull('deleted_at');
 
-        if ($search && $filterBy) {
-            $query = DB::table('pasiens')->whereNull('deleted_at');
+    if ($search && $filterBy) {
 
-            if ($filterBy == 'tanggal_lahir') {
-                // Pastikan format tanggal input sesuai dengan format di database (YYYY-MM-DD)
-                // Atau lakukan konversi jika perlu
-                $query->whereDate('tanggal_lahir', $search);
-            } else {
-                $query->where($filterBy, 'ILIKE', "%{$search}%");
-            }
-            
-            $pasiens = $query->get();
+        if ($filterBy == 'tanggal_lahir') {
+            $query->whereDate('tanggal_lahir', $search);
+        } else {
+            $query->where($filterBy, 'ILIKE', "%{$search}%");
         }
 
-        return view('admin.pendaftaran.cari_pasien', compact('pasiens'));
+        $pasiens = $query->get();
+
+    } else {
+
+        $pasiens = $query
+            ->orderByDesc('created_at')
+            ->limit(15)
+            ->get();
+
     }
+
+    return view('admin.pendaftaran.cari_pasien', compact('pasiens'));
+}
 
     public function cancelRegis($id)
     {

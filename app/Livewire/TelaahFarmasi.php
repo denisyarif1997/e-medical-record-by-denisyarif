@@ -51,7 +51,7 @@ class TelaahFarmasi extends Component
             FROM pendaftaran p
             JOIN pasiens pas ON p.pasien_id = pas.id
             JOIN poliklinik pol ON p.poli_id = pol.id
-            JOIN dokters d ON p.dokter_id = d.id
+            JOIN tenaga_medis d ON p.dokter_id = d.id
             WHERE p.id = ?", [$id]);
 
         $medis = DB::selectOne("SELECT asesmen FROM asesmen_medis WHERE id_regis = ?", [$id]);

@@ -22,7 +22,7 @@ class Pendaftaran
             FROM pendaftaran p
             LEFT JOIN pasiens pas ON p.pasien_id = pas.id
             LEFT JOIN poliklinik pol ON p.poli_id = pol.id
-            LEFT JOIN dokters d ON p.dokter_id = d.id
+            LEFT JOIN tenaga_medis d ON p.dokter_id = d.id
             LEFT JOIN asuransi a ON p.id_asuransi = a.id
             WHERE p.deleted_at IS NULL
             AND DATE(p.created_at) BETWEEN ? AND ?

@@ -130,7 +130,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label><strong>Sistolik</strong></label>
+                                                <label><strong>Sistolik</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" name="sistolik" class="form-control" placeholder="mmHg">
                                                     <div class="input-group-append"><span class="input-group-text">mmHg</span></div>
@@ -139,7 +139,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label><strong>Diastolik</strong></label>
+                                                <label><strong>Diastolik</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" name="diastolik" class="form-control" placeholder="mmHg">
                                                     <div class="input-group-append"><span class="input-group-text">mmHg</span></div>
@@ -150,7 +150,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label><strong>Nadi</strong></label>
+                                                <label><strong>Nadi</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" name="nadi" class="form-control" placeholder="x/mnt">
                                                     <div class="input-group-append"><span class="input-group-text">x/mnt</span></div>
@@ -159,7 +159,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label><strong>Pernapasan</strong></label>
+                                                <label><strong>Pernapasan</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" name="pernapasan" class="form-control" placeholder="x/mnt">
                                                     <div class="input-group-append"><span class="input-group-text">x/mnt</span></div>
@@ -170,7 +170,7 @@
                                     <div class="row">
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label><strong>Suhu</strong></label>
+                                                <label><strong>Suhu</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" step="0.1" name="suhu" class="form-control" placeholder="°C">
                                                     <div class="input-group-append"><span class="input-group-text">°C</span></div>
@@ -179,7 +179,7 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label><strong>Tinggi</strong></label>
+                                                <label><strong>Tinggi</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" step="0.1" name="tinggi_badan" class="form-control" placeholder="cm">
                                                     <div class="input-group-append"><span class="input-group-text">cm</span></div>
@@ -188,7 +188,7 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="form-group">
-                                                <label><strong>Berat</strong></label>
+                                                <label><strong>Berat</strong><span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" step="0.1" name="berat_badan" class="form-control" placeholder="kg">
                                                     <div class="input-group-append"><span class="input-group-text">kg</span></div>
@@ -197,7 +197,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group mt-2">
-                                        <label><strong>IMT (Indeks Massa Tubuh)</strong></label>
+                                        <label><strong>IMT (Indeks Massa Tubuh)</strong><span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <input type="text" name="imt" id="imt" class="form-control font-weight-bold" readonly style="background-color: #f8f9fa;">
                                             <div class="input-group-append">
@@ -219,7 +219,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label><strong>Status Mental / Psikososial</strong></label>
+                                        <label><strong>Status Mental / Psikososial</strong> </label>
                                         <select name="status_psikososial" class="form-control">
                                             <option value="Tenang">Tenang</option>
                                             <option value="Cemas">Cemas</option>

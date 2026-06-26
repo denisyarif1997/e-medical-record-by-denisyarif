@@ -11,9 +11,9 @@ class PoliklinikController extends Controller
     public function index()
     {
         $poliklinik = DB::table('poliklinik')
-            ->join('dokters', 'poliklinik.dokter_id', '=', 'dokters.id')
-            ->select('poliklinik.*', 'dokters.nama as dokter_nama')
-            ->whereNull('dokters.deleted_at')
+            ->join('tenaga_medis', 'poliklinik.dokter_id', '=', 'tenaga_medis.id')
+            ->select('poliklinik.*', 'tenaga_medis.nama as dokter_nama')
+            ->whereNull('tenaga_medis.deleted_at')
             ->get();
 
         return view('admin.poliklinik.index', compact('poliklinik'));
@@ -22,7 +22,7 @@ class PoliklinikController extends Controller
     public function create()
     {
         // Mendapatkan daftar dokter untuk dropdown
-        $dokters = DB::table('dokters')
+        $dokters = DB::table('tenaga_medis')
         ->whereNull('deleted_at')
         ->get();
         return view('admin.poliklinik.create', compact('dokters'));
@@ -64,16 +64,17 @@ class PoliklinikController extends Controller
         // Mengambil data poliklinik berdasarkan ID
         $id = decrypt($id);
         $poliklinik = Poliklinik::findOrFail($id);
-        $dokters = DB::table('dokters')
+        $dokters = DB::table('tenaga_medis')
         ->whereNull('deleted_at')
-        ->get();        return view('admin.poliklinik.edit', compact('poliklinik', 'dokters'));
+        ->get();
+        return view('admin.poliklinik.edit', compact('poliklinik', 'dokters'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'dokter_id' => 'required|integer|exists:dokters,id',
+            'dokter_id' => 'required|integer|exists:tenaga_medis,id',
             'waktu_mulai' => 'required|date_format:H:i',
             'waktu_selesai' => 'required|date_format:H:i',
             'hari' => 'required|string|max:50',
